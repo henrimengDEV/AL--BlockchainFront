@@ -24,7 +24,7 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
             <Column
                 body={(data: Building) =>
                     <Link to={`/profile/${data.owner.address}`}>
-                        {data.owner.username}
+                        {data.owner.address}
                     </Link>
                 }
                 header="Owner"

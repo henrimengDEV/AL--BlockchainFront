@@ -9,7 +9,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {ConfirmDialog} from "primereact/confirmdialog";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    <React.StrictMode>
+    <React.Fragment>
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <Menu />
@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 <ConfirmDialog style={{backgroundColor: 'red'}} />
             </PersistGate>
         </Provider>
-    </React.StrictMode>,
+    </React.Fragment>,
 )
 
 // ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

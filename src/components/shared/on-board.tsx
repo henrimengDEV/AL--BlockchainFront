@@ -6,6 +6,7 @@ import {Button} from "primereact/button";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {changeConnectedUser, resetConnectedUser} from "../../store/user/user.slice";
 
+
 const coinbaseWalletSdk = coinbaseWalletModule();
 const walletConnect = walletConnectModule();
 const injected = injectedModule();
@@ -57,29 +58,6 @@ const OnBoard = () => {
     const connectedUser = useAppSelector(state => state.user.connectedUser);
     const dispatch = useAppDispatch();
 
-    const connectWallet = async () => {
-        try {
-            await onboard.connectWallet().then(value => {
-                dispatch(changeConnectedUser({
-                    username: value[0].accounts[0].ens?.name || '',
-                    address: value[0].accounts[0].address
-                }))
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const disconnect = async () => {
-        const [primaryWallet] = onboard.state.get().wallets;
-        if (primaryWallet) await onboard.disconnectWallet({label: primaryWallet.label});
-        refreshState();
-    };
-
-    const refreshState = () => {
-        dispatch(resetConnectedUser())
-    };
-
     return (
         <>
             {
@@ -94,6 +72,37 @@ const OnBoard = () => {
             }
         </>
     );
+
+    async function connectWallet() {
+        try {
+            await onboard.connectWallet().then(value => {
+                dispatch(changeConnectedUser({
+                    username: value[0].accounts[0].ens?.name || '',
+                    address: value[0].accounts[0].address
+                }))
+
+                // getDiceContract().then(({ contract}) => {
+                //     if (contract) {
+                //         contract.rollDice().then((result) => {
+                //             console.log(BigNumber.from(result).toNumber());
+                //         });
+                //     }
+                // });
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function disconnect() {
+        const [primaryWallet] = onboard.state.get().wallets;
+        if (primaryWallet) await onboard.disconnectWallet({label: primaryWallet.label});
+        refreshState();
+    }
+
+    function refreshState() {
+        dispatch(resetConnectedUser())
+    }
 }
 
 export default OnBoard

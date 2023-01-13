@@ -8,7 +8,8 @@ import {Dropdown} from "primereact/dropdown";
 import {Building} from "../../store/building/building.model";
 import {Message} from "primereact/message";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {updateBuilding} from "../../store/building/building.slice";
+import {createBuilding, updateBuilding} from "../../store/building/building.slice";
+import {isOwnerBuildingTaken} from "../shared/file-utils";
 
 const ToolbarBuilding = () => {
     const dispatch = useAppDispatch();
@@ -25,6 +26,11 @@ const ToolbarBuilding = () => {
             <Toolbar
                 className="p-2 mb-3"
                 right={<>
+                    <Button
+                        label="Create a building"
+                        icon="pi pi-plus"
+                        onClick={handleCreateBuilding}
+                    />
                     <Button
                         label="Create an auction"
                         icon="pi pi-plus"
@@ -45,9 +51,9 @@ const ToolbarBuilding = () => {
                     footer={footer}
                     onHide={() => setDialogCreateAuction(false)}
                 >
-                    {error ? <Message severity="error" text={error} /> : ""}
+                    {error ? <Message severity="error" text={error}/> : ""}
                     <Dropdown
-                        options={buildings.filter(value => value.owner.address === connectedUser?.address && !value.isBuyable)}
+                        options={buildings.filter(value => isOwnerBuildingTaken(value, connectedUser))}
                         optionLabel="name"
                         placeholder="Select a Building"
                         value={building}
@@ -65,11 +71,25 @@ const ToolbarBuilding = () => {
         </div>
     );
 
+    function handleCreateBuilding() {
+        const now = Date.now()
+
+        const newBuilding: Building = {
+            name: "",
+            price: 1,
+            isBuyable: false,
+            owner: null,
+            lastUpdateDate: now.toString()
+        }
+
+        dispatch(createBuilding(newBuilding))
+    }
+
     function footer() {
         return (
             <div>
-                <Button label="Cancel" icon="pi pi-times" onClick={() => setDialogCreateAuction(false)} />
-                <Button label="Submit" loading={isLoading} loadingIcon="pi pi-spin pi-sun" onClick={onSubmit} />
+                <Button label="Cancel" icon="pi pi-times" onClick={() => setDialogCreateAuction(false)}/>
+                <Button label="Submit" loading={isLoading} loadingIcon="pi pi-spin pi-sun" onClick={onSubmit}/>
             </div>
         )
     }

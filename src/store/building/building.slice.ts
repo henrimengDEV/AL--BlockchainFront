@@ -1,6 +1,8 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Building} from "./building.model";
 import {CHINOISERIZ, KRAPX, KRFT} from "../user/user.model";
+import {getPolyFactory} from "../../contract";
+import {BigNumber} from "ethers";
 
 const todayAsString: string = new Date().toString();
 
@@ -24,12 +26,70 @@ const buildingSlice = createSlice({
         addBuilding(state, action: PayloadAction<Building>) {
             state.entities.push(action.payload)
         },
+        setBuildings(state, action: PayloadAction<Building[]>) {
+            console.log('setBuildings')
+            console.table(action.payload)
+            return {
+                ...state,
+                entities: action.payload
+            }
+        },
         updateBuilding(state, action: PayloadAction<Building>) {
             const index = state.entities.findIndex(state => state.name === action.payload.name)
             state.entities[index] = action.payload
+        },
+        createBuilding(state, action: PayloadAction<Building>) {
+            getPolyFactory().then(({contract: contract}) => {
+                if (!contract) {
+                    console.log("contract is null")
+                    return;
+                }
+
+                const newBuilding: Building = action.payload
+
+                console.log(newBuilding)
+
+                contract.createUniqueNFT("Baltic_Avenue", 0)
+            })
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(getBuildings.fulfilled, (state, action) => {
+            state.entities = action.payload
+        })
     }
 })
 
-export const {addBuilding, updateBuilding} = buildingSlice.actions
+export const getBuildings = createAsyncThunk(
+    'building/getBuildings',
+    async () => {
+        return await getPolyFactory().then(({contract}) => {
+            if (!contract) {
+                console.log("contract is null")
+                return;
+            }
+
+            return contract.getBuildings().then((result) => {
+
+                const newState = result.map(item => {
+                    const building: Building = {
+                        name: item.name || 'name',
+                        price: BigNumber.from(item.price).toNumber() || 1,
+                        owner: {username: 'foo', address: item.owner} || null,
+                        isBuyable: item.isBuyable || false,
+                        lastUpdateDate: item.lastUpdateDate || 'lastUpdateDate',
+                    }
+
+                    return building
+                })
+
+                console.log(newState)
+
+                return newState
+            })
+        })
+    }
+)
+
+export const {addBuilding, setBuildings, updateBuilding, createBuilding} = buildingSlice.actions
 export default buildingSlice.reducer

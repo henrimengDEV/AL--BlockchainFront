@@ -9,6 +9,7 @@ import {Button} from "primereact/button";
 import {confirmDialog} from "primereact/confirmdialog";
 import {Building} from "../../store/building/building.model";
 import {updateBuilding} from "../../store/building/building.slice";
+import {isOwner, isOwnerBuildingTaken} from "./file-utils";
 
 const PanelAuctionOffer = () => {
     const dispatch = useAppDispatch()
@@ -26,7 +27,7 @@ const PanelAuctionOffer = () => {
                 collapsed
             >
                 <DataTable
-                    value={buildings.filter(value => value.owner.address === connectedUser?.address && value.isBuyable)}
+                    value={buildings.filter(value => isOwnerBuildingTaken(value, connectedUser))}
                     responsiveLayout="scroll"
                     cellSelection
                     size="small"
@@ -64,7 +65,7 @@ const PanelAuctionOffer = () => {
                 collapsed
             >
                 <DataTable
-                    value={offers.filter(value => value.from.address === connectedUser?.address)}
+                    value={offers.filter(value => isOwner(value.from.address, connectedUser))}
                     responsiveLayout="scroll"
                     cellSelection
                     size="small"
