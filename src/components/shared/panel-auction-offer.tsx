@@ -4,15 +4,14 @@ import {Column} from "primereact/column";
 import {Link} from "react-router-dom";
 import React from "react";
 import {Offer} from "../../store/offer/offer.model";
-import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {useAppSelector} from "../../app/hooks";
 import {Button} from "primereact/button";
 import {confirmDialog} from "primereact/confirmdialog";
 import {Building} from "../../store/building/building.model";
-import {updateBuilding} from "../../store/building/building.slice";
-import {isOwner, isOwnerBuildingTaken} from "./file-utils";
+import {isOwner, isOwnerBuildingBuyable} from "./file-utils";
+import {deleteBuildingToAuction} from "../../store/building/building.api";
 
 const PanelAuctionOffer = () => {
-    const dispatch = useAppDispatch()
     const connectedUser = useAppSelector(state => state.user.connectedUser)
     const offers = useAppSelector(state => state.offer.entities)
     const buildings = useAppSelector(state => state.building.entities)
@@ -27,7 +26,7 @@ const PanelAuctionOffer = () => {
                 collapsed
             >
                 <DataTable
-                    value={buildings.filter(value => isOwnerBuildingTaken(value, connectedUser))}
+                    value={buildings.filter(value => isOwnerBuildingBuyable(value, connectedUser))}
                     responsiveLayout="scroll"
                     cellSelection
                     size="small"
@@ -93,7 +92,7 @@ const PanelAuctionOffer = () => {
             message: <p>Are you sure you want to cancel auction of <strong>{data.name}</strong> ?</p>,
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                dispatch(updateBuilding({...data, isBuyable: false}))
+                deleteBuildingToAuction(data.id)
             },
         });
     }

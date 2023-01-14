@@ -18,6 +18,10 @@ export function isOwnerBuildingTaken(building: Building, connectedUser: User) {
     return building.owner.address.toLowerCase() === connectedUser?.address && !building.isBuyable
 }
 
+export function isOwnerBuildingBuyable(building: Building, connectedUser: User): boolean {
+    return building.owner.address.toLowerCase() === connectedUser?.address && building.isBuyable
+}
+
 export function isOwner(address: string, connectedUser: User) {
     return address.toLowerCase() === connectedUser?.address
 }
