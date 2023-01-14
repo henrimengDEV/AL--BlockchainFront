@@ -3,7 +3,6 @@ import {Building, CreateBuilding} from "./building.model";
 import {getPolyFactory} from "../../contract";
 import {convertBigNumberToNumber, getBuildingNameType} from "../../components/shared/file-utils";
 
-const todayAsString: string = new Date().toString();
 
 interface BuildingState {
     entities: Building[]
