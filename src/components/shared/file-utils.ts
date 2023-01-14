@@ -10,6 +10,10 @@ export function convertBigNumberToNumber(bigNumber: BigNumber) {
     return BigNumber.from(bigNumber).toNumber()
 }
 
+export function convertNumberToBigNumber(number: number) {
+    return BigNumber.from(number)
+}
+
 export function isOwnerBuildingTaken(building: Building, connectedUser: User) {
     return building.owner.address.toLowerCase() === connectedUser?.address && !building.isBuyable
 }
