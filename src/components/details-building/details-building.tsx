@@ -10,7 +10,8 @@ import {Offer} from "../../store/offer/offer.model";
 import {useAppSelector} from "../../app/hooks";
 
 const DetailsBuilding = () => {
-    let {name} = useParams();
+    let {id} = useParams();
+    const dispatch = useAppDispatch()
     const offers = useAppSelector(state => state.offer.entities)
     const buildings = useAppSelector(state => state.building.entities)
     const [building] = useState(() => buildings.find(value => value.name === name));

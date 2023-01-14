@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: <RouterGuard children={<MarketBuilding />} />,
     },
     {
-        path: "/building/:name",
+        path: "/building/:id",
         element: <RouterGuard children={<DetailsBuilding />} />,
     },
     {
