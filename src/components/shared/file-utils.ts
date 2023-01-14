@@ -17,3 +17,7 @@ export function isOwnerBuildingTaken(building: Building, connectedUser: User) {
 export function isOwner(address: string, connectedUser: User) {
     return address.toLowerCase() === connectedUser?.address
 }
+
+export function areAddressesEquals(address1: string, address2: string) {
+    return address1.toLowerCase() === address2.toLowerCase()
+}

@@ -7,11 +7,14 @@ import {TabPanel, TabView} from "primereact/tabview";
 import DatatableBuilding from "../shared/datatable-building";
 import Clipboard from "../shared/clipboard/clipboard";
 import {Button} from "primereact/button";
-import {copyInClipboard} from "../shared/file-utils";
+import {areAddressesEquals, copyInClipboard, isOwner} from "../shared/file-utils";
+import {useAppSelector} from "../../app/hooks";
 
 const Profile = () => {
     let {address} = useParams();
-    const [user] = useState(() => store.users.find(value => value.address === address));
+    const users = useAppSelector(state => state.user.entities)
+    const buildings = useAppSelector(state => state.building.entities)
+    const [user] = useState(() => users.find(value => areAddressesEquals(value.address.toLowerCase(), address)));
 
     return (
         <div className="Profile">
@@ -37,7 +40,7 @@ const Profile = () => {
 
                 <TabView className="custom-datatable">
                     <TabPanel header="Buildings">
-                        <DatatableBuilding buildinds={store.buildings.filter(value => value.owner.address === address)} />
+                        <DatatableBuilding buildinds={buildings.filter(value => areAddressesEquals(value.owner.address, address))} />
                     </TabPanel>
                     <TabPanel header="Auctions">
                         Content II
