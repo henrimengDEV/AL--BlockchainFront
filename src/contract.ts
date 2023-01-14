@@ -26,6 +26,7 @@ const polyFactoryAbi = [
     "event ApprovalForAll(address indexed account, address indexed operator, bool approved)",
     "event BuildingPuttedToAuction(uint256 buildingId, uint256 price)",
     "event BuildingSold(uint256 buildingId, uint256 price, address previousOwner, address newOwner)",
+    "event CancelSold(uint256 buildingId)",
     "event NewBoard(uint256 boardId, string name, uint256 blind, uint256 buyIn)",
     "event NewBuilding(uint256 buildingId, string name)",
     "event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)",
@@ -37,17 +38,18 @@ const polyFactoryAbi = [
     "function boards(uint256) view returns (string name, uint256 blind, uint256 buyIn, uint256 boardId)",
     "function buildingToBoard(uint256) view returns (uint256)",
     "function buildingToOwner(uint256) view returns (address)",
-    "function buildings(uint256) view returns (uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner)",
+    "function buildings(uint256) view returns (uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner, uint256 buildingId)",
     "function buyBuilding(uint256 _buildingId) payable",
     "function createBoard(string _name, uint256 _blind, uint256 _buyIn)",
     "function createUniqueNFT(string _type, uint256 _boardId)",
-    "function findBuildingByOwner(address _owner) view returns (tuple(uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner)[])",
-    "function findBuildingsByBoardId(uint256 _boardId) view returns (tuple(uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner)[])",
+    "function deleteAuction(uint256 _buildingId)",
+    "function findBuildingByOwner(address _owner) view returns (tuple(uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner, uint256 buildingId)[])",
+    "function findBuildingsByBoardId(uint256 _boardId) view returns (tuple(uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner, uint256 buildingId)[])",
     "function getBoardIds() view returns (uint256)",
     "function getBoards() view returns (tuple(string name, uint256 blind, uint256 buyIn, uint256 boardId)[])",
     "function getBuildingIds() view returns (uint256)",
     "function getBuildingTypeName(uint256 buildingTypeIndex) pure returns (string)",
-    "function getBuildings() view returns (tuple(uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner)[])",
+    "function getBuildings() view returns (tuple(uint8 nameType, uint256 boardId, uint256 price, bool isBuyable, address owner, uint256 buildingId)[])",
     "function getLastBuildingIds() view returns (uint256)",
     "function getOwnerByBuildingId(uint256 buildingId) view returns (address)",
     "function isApprovedForAll(address account, address operator) view returns (bool)",
@@ -67,3 +69,4 @@ export const getPolyFactory = async () => {
     const contract = new ethers.Contract(polyFactoryAddress, polyFactoryAbi, signer);
     return { signer: signer, contract: contract };
 };
+

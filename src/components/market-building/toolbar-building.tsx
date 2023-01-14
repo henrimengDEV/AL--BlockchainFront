@@ -1,15 +1,16 @@
 import "./toolbar-building.css";
-import React, {useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Toolbar} from "primereact/toolbar";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
 import {InputNumber} from "primereact/inputnumber";
 import {Dropdown} from "primereact/dropdown";
-import {Building} from "../../store/building/building.model";
+import {Building, CreateBuilding} from "../../store/building/building.model";
 import {Message} from "primereact/message";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {createBuilding, updateBuilding} from "../../store/building/building.slice";
-import {isOwnerBuildingTaken} from "../shared/file-utils";
+import {createBuilding,  updateBuilding} from "../../store/building/building.slice";
+import { isOwnerBuildingTaken} from "../shared/file-utils";
+import {getPolyFactory} from "../../contract";
 
 const ToolbarBuilding = () => {
     const dispatch = useAppDispatch();
@@ -54,7 +55,8 @@ const ToolbarBuilding = () => {
                     {error ? <Message severity="error" text={error}/> : ""}
                     <Dropdown
                         options={buildings.filter(value => isOwnerBuildingTaken(value, connectedUser))}
-                        optionLabel="name"
+                        optionLabel="id"
+                        itemTemplate={dropDownItemTemplate}
                         placeholder="Select a Building"
                         value={building}
                         onChange={(e) => setBuilding(e.value)}
@@ -71,10 +73,17 @@ const ToolbarBuilding = () => {
         </div>
     );
 
+    function dropDownItemTemplate(option): ReactElement {
+        return (
+            <div>{`${option.id} : ${option.name}`}</div>
+        )
+    }
+
     function handleCreateBuilding() {
         const now = Date.now()
 
-        const newBuilding: Building = {
+
+        const newBuilding: CreateBuilding = {
             name: "",
             price: 1,
             isBuyable: false,
@@ -106,15 +115,33 @@ const ToolbarBuilding = () => {
         }
 
         setIsLoading(true)
-        console.log(building)
-        console.log(price)
+        // console.log(building)
+        // console.log(price)
 
         setTimeout(() => {
             reset()
             setDialogCreateAuction(false)
             setIsLoading(false)
             dispatch(updateBuilding({...building, isBuyable: true}))
+            putToAuction()
         }, 2000)
+
+
+    }
+
+    function putToAuction() {
+        console.log('putToAuction')
+        console.log(buildings)
+        //dispatch(putBuildingToAuction(building.id, building.price))
+        getPolyFactory().then(({contract}) => {
+            if (!contract) {
+                console.log("contract is null")
+                return;
+            }
+
+            console.log(building)
+            contract.putBuildingToAuction(building.id, price);
+        })
     }
 }
 

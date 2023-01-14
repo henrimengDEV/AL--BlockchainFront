@@ -1,20 +1,31 @@
 import "./details-building.css";
 import {Link, useParams} from "react-router-dom";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button} from "primereact/button";
 import inProgress from '../../assets/undraw_in_progress.png'
 import {Accordion, AccordionTab} from "primereact/accordion";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Offer} from "../../store/offer/offer.model";
-import {useAppSelector} from "../../app/hooks";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {getPolyFactory} from "../../contract";
+import {getBuildingById} from "../../store/building/building.slice";
+import {isOwner} from "../shared/file-utils";
 
 const DetailsBuilding = () => {
-    let {name} = useParams();
+    let {id} = useParams();
+    const dispatch = useAppDispatch()
     const offers = useAppSelector(state => state.offer.entities)
-    const buildings = useAppSelector(state => state.building.entities)
-    const [building] = useState(() => buildings.find(value => value.name === name));
+    const building = useAppSelector(state => state.building.entity)
+    const connectedUser = useAppSelector(state => state.user.connectedUser)
     const [activeIndex, setActiveIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        dispatch(getBuildingById(+id))
+    }, [])
+
 
     if (building == null) return <></>
     return (
@@ -85,7 +96,14 @@ const DetailsBuilding = () => {
     }
 
     function BuildingCardFooter() {
-        return <Button icon="pi pi-tag" className="DetailsBuilding__make-offer" label={'Make offer'} />
+        return <Button
+            icon="pi pi-tag"
+            className="DetailsBuilding__make-offer"
+            label={'Make offer'}
+            onClick={onSubmit}
+            loading={isLoading}
+            loadingIcon="pi pi-spin pi-sun"
+        />
     }
 
     function OffersCardTitle() {
@@ -93,6 +111,29 @@ const DetailsBuilding = () => {
             <i className="pi pi-list" />
             Offers
         </div>
+    }
+
+    function onSubmit() {
+        if (building == null) {
+            setError("A building is required to create an auction !")
+            return
+        }
+
+        setIsLoading(true)
+
+        getPolyFactory().then(({contract}) => {
+            if (!contract) {
+                window.alert("contract is null")
+                return;
+            }
+
+            if(isOwner(building.owner.address, connectedUser)) {
+                window.alert("you are not allow to buy this building")
+                return;
+            }
+
+            contract.buyBuilding(id);
+        }).finally(() => setIsLoading(false))
     }
 }
 

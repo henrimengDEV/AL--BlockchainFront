@@ -65,7 +65,7 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
 
     function action(building: Building) {
         return building.isBuyable
-            ? <Link to={`/building/${building.name}`} style={{textDecoration: 'none'}}>
+            ? <Link to={`/building/${building.id}`} style={{textDecoration: 'none'}}>
                 <Button
                     icon="pi pi-angle-right"
                     className="p-button-rounded p-button-outlined"
