@@ -9,7 +9,8 @@ import {Building} from "../../store/building/building.model";
 import {Message} from "primereact/message";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {createBuilding, updateBuilding} from "../../store/building/building.slice";
-import {isOwnerBuildingTaken} from "../shared/file-utils";
+import {convertBigNumberToNumber, isOwnerBuildingTaken} from "../shared/file-utils";
+import {getPolyFactory} from "../../contract";
 
 const ToolbarBuilding = () => {
     const dispatch = useAppDispatch();
@@ -74,6 +75,7 @@ const ToolbarBuilding = () => {
     function handleCreateBuilding() {
         const now = Date.now()
 
+
         const newBuilding: Building = {
             name: "",
             price: 1,
@@ -106,15 +108,47 @@ const ToolbarBuilding = () => {
         }
 
         setIsLoading(true)
-        console.log(building)
-        console.log(price)
+        // console.log(building)
+        // console.log(price)
 
         setTimeout(() => {
             reset()
             setDialogCreateAuction(false)
             setIsLoading(false)
             dispatch(updateBuilding({...building, isBuyable: true}))
+            putToAuction()
         }, 2000)
+
+
+    }
+
+    function putToAuction() {
+        getPolyFactory().then(({contract}) => {
+            if (!contract) {
+                console.log("contract is null")
+                return;
+            }
+            const buildings = contract.getBuildings().then((result) => {
+                const buildingGet: Building[] = result.map(item => {
+                    const eachBuilding: Building = {
+                        id: convertBigNumberToNumber(item.buildingId),
+                        name: item.nameType,
+                        price: item.price,
+                        owner: item.owner,
+                        isBuyable: item.isBuyable,
+                        lastUpdateDate: Date.now().toString(),
+                    }
+
+                    return eachBuilding;
+                })
+                return buildingGet;
+            })
+            console.log(buildings);
+            // TODO rendre l'id et le prix dynamique avec l'IHM
+            contract.putBuildingToAuction(0, 2).then(() => {
+            })
+        })
+
     }
 }
 
