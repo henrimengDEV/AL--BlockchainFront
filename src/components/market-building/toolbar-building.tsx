@@ -1,5 +1,5 @@
 import "./toolbar-building.css";
-import React, {useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Toolbar} from "primereact/toolbar";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
@@ -8,8 +8,8 @@ import {Dropdown} from "primereact/dropdown";
 import {Building} from "../../store/building/building.model";
 import {Message} from "primereact/message";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {createBuilding, updateBuilding} from "../../store/building/building.slice";
-import {convertBigNumberToNumber, isOwnerBuildingTaken} from "../shared/file-utils";
+import {createBuilding,  updateBuilding} from "../../store/building/building.slice";
+import { isOwnerBuildingTaken} from "../shared/file-utils";
 import {getPolyFactory} from "../../contract";
 
 const ToolbarBuilding = () => {
@@ -55,7 +55,8 @@ const ToolbarBuilding = () => {
                     {error ? <Message severity="error" text={error}/> : ""}
                     <Dropdown
                         options={buildings.filter(value => isOwnerBuildingTaken(value, connectedUser))}
-                        optionLabel="name"
+                        optionLabel="id"
+                        itemTemplate={dropDownItemTemplate}
                         placeholder="Select a Building"
                         value={building}
                         onChange={(e) => setBuilding(e.value)}
@@ -123,32 +124,18 @@ const ToolbarBuilding = () => {
     }
 
     function putToAuction() {
+        console.log('putToAuction')
+        console.log(buildings)
+        //dispatch(putBuildingToAuction(building.id, building.price))
         getPolyFactory().then(({contract}) => {
             if (!contract) {
                 console.log("contract is null")
                 return;
             }
-            const buildings = contract.getBuildings().then((result) => {
-                const buildingGet: Building[] = result.map(item => {
-                    const eachBuilding: Building = {
-                        id: convertBigNumberToNumber(item.buildingId),
-                        name: item.nameType,
-                        price: item.price,
-                        owner: item.owner,
-                        isBuyable: item.isBuyable,
-                        lastUpdateDate: Date.now().toString(),
-                    }
 
-                    return eachBuilding;
-                })
-                return buildingGet;
-            })
-            console.log(buildings);
-            // TODO rendre l'id et le prix dynamique avec l'IHM
-            contract.putBuildingToAuction(0, 2).then(() => {
-            })
+            console.log(building)
+            contract.putBuildingToAuction(building.id, price);
         })
-
     }
 }
 

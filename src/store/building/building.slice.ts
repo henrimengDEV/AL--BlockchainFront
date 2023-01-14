@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Building} from "./building.model";
 import {CHINOISERIZ, KRAPX, KRFT} from "../user/user.model";
 import {getPolyFactory} from "../../contract";
-import {BigNumber} from "ethers";
+import {convertBigNumberToNumber, getBuildingNameType} from "../../components/shared/file-utils";
 
 const todayAsString: string = new Date().toString();
 
@@ -34,10 +34,12 @@ const buildingSlice = createSlice({
                 entities: action.payload
             }
         },
+
         updateBuilding(state, action: PayloadAction<Building>) {
             const index = state.entities.findIndex(state => state.name === action.payload.name)
             state.entities[index] = action.payload
         },
+
         createBuilding(state, action: PayloadAction<Building>) {
             getPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
@@ -73,8 +75,9 @@ export const getBuildings = createAsyncThunk(
 
                 const newState = result.map(item => {
                     const building: Building = {
-                        name: item.name || 'name',
-                        price: BigNumber.from(item.price).toNumber() || 1,
+                        id: convertBigNumberToNumber(item.buildingId),
+                        name: getBuildingNameType(item.nameType) || 'name',
+                        price: convertBigNumberToNumber(item.price) || 1,
                         owner: {username: 'foo', address: item.owner} || null,
                         isBuyable: item.isBuyable || false,
                         lastUpdateDate: item.lastUpdateDate || 'lastUpdateDate',
