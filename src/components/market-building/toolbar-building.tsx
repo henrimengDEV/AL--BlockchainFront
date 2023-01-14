@@ -73,6 +73,12 @@ const ToolbarBuilding = () => {
         </div>
     );
 
+    function dropDownItemTemplate(option): ReactElement {
+        return (
+            <div>{`${option.id} : ${option.name}`}</div>
+        )
+    }
+
     function handleCreateBuilding() {
         const now = Date.now()
 

@@ -74,6 +74,8 @@ export const getBuildings = createAsyncThunk(
             return contract.getBuildings().then((result) => {
 
                 const newState = result.map(item => {
+                    console.log(item)
+
                     const building: Building = {
                         id: convertBigNumberToNumber(item.buildingId),
                         name: getBuildingNameType(item.nameType) || 'name',

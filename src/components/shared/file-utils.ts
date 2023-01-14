@@ -6,15 +6,15 @@ export function copyInClipboard(text: string) {
     navigator.clipboard.writeText(text)
 }
 
-export function convertBigNumberToNumber(bigNumber: BigNumber) {
+export function convertBigNumberToNumber(bigNumber: BigNumber): number {
     return BigNumber.from(bigNumber).toNumber()
 }
 
-export function convertNumberToBigNumber(number: number) {
+export function convertNumberToBigNumber(number: number): BigNumber {
     return BigNumber.from(number)
 }
 
-export function isOwnerBuildingTaken(building: Building, connectedUser: User) {
+export function isOwnerBuildingTaken(building: Building, connectedUser: User): boolean {
     return building.owner.address.toLowerCase() === connectedUser?.address && !building.isBuyable
 }
 
@@ -22,7 +22,7 @@ export function isOwnerBuildingBuyable(building: Building, connectedUser: User):
     return building.owner.address.toLowerCase() === connectedUser?.address && building.isBuyable
 }
 
-export function isOwner(address: string, connectedUser: User) {
+export function isOwner(address: string, connectedUser: User): boolean {
     return address.toLowerCase() === connectedUser?.address
 }
 
