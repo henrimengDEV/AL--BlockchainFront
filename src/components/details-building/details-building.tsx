@@ -132,7 +132,7 @@ const DetailsBuilding = () => {
                 return;
             }
 
-            contract.buyBuilding(id);
+            contract.buyBuilding(id, {value: building.price});
         }).finally(() => setIsLoading(false))
     }
 }
