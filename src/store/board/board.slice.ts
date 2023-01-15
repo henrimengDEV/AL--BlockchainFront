@@ -1,7 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Board} from "./board.model";
-import {getPolyFactory} from "../../contract";
-import {convertBigNumberToNumber} from "../../components/shared/file-utils";
+import {getContractPolyFactory} from "../../contract";
+import {convertBigNumberToNumber, getErrorMessage} from "../../components/shared/file-utils";
+import {useAppDispatch} from "../../app/hooks";
+import {setToastEntity} from "../toast/toast.slice";
 
 interface BoardState {
     entities: Board[]
@@ -20,27 +22,23 @@ const boardSlice = createSlice({
     name: "board",
     initialState,
     reducers: {
-        addBoard(state, action: PayloadAction<Board>) {
-            state.entities.push(action.payload)
-        },
-        createBoard(state, action: PayloadAction<Board>) {
-            getPolyFactory().then(({contract: contract}) => {
+        createBoard(state, action: PayloadAction<{newBoard: Board, onError: (error: string) => void}>) {
+            getContractPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
                     console.log("contract is null")
                     return;
                 }
 
-                const newBoard: Board = action.payload
-
-                console.log(newBoard)
-
-                contract.createBoard("TestBoard1", 10, 100)
+                const newBoard: Board = action.payload.newBoard
+                contract.createBoard(newBoard.name, newBoard.buyIn, newBoard.blind)
+                    .then(
+                    res => {},
+                    err => {
+                        action.payload.onError(getErrorMessage(err))
+                    }
+                )
             })
-        },
-        setBoards(state, action: PayloadAction<Board[]>) {
-            console.log("test")
-            state.entities = action.payload
-        },
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(getAllBoards.fulfilled, (state, action) => {
@@ -52,7 +50,7 @@ const boardSlice = createSlice({
 export const getAllBoards = createAsyncThunk(
     'board/getBuildings',
     async () => {
-        return await getPolyFactory().then(({ contract}) => {
+        return await getContractPolyFactory().then(({contract}) => {
             if (!contract) {
                 console.log("contract is null")
                 return;
@@ -69,11 +67,11 @@ export const getAllBoards = createAsyncThunk(
                     return newBoard
                 })
 
-                return  newBoardsState
+                return newBoardsState
             })
         })
     }
 )
 
-export const {addBoard, setBoards, createBoard} = boardSlice.actions
+export const {createBoard} = boardSlice.actions
 export default boardSlice.reducer

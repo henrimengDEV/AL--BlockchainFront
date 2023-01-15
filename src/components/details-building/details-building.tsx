@@ -8,7 +8,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Offer} from "../../store/offer/offer.model";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {getPolyFactory} from "../../contract";
+import {getContractPolyFactory} from "../../contract";
 import {getBuildingById} from "../../store/building/building.slice";
 import {isOwner} from "../shared/file-utils";
 
@@ -121,7 +121,7 @@ const DetailsBuilding = () => {
 
         setIsLoading(true)
 
-        getPolyFactory().then(({contract}) => {
+        getContractPolyFactory().then(({contract}) => {
             if (!contract) {
                 window.alert("contract is null")
                 return;

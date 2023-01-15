@@ -1,0 +1,11 @@
+.Home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 80vh;
+}
+
+.Home img {
+    width: 50%;
+}

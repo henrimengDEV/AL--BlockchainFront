@@ -2,9 +2,11 @@ import {Menubar} from "primereact/menubar";
 import React, {useState} from "react";
 import {Dialog} from "primereact/dialog";
 import OnBoard from "../shared/on-board";
+import {useAppSelector} from "../../app/hooks";
 
 const Menu = () => {
     const [visible, setVisible] = useState<boolean>(false);
+    const connectedUser = useAppSelector(state => state.user.connectedUser)
 
     return (
         <>
@@ -21,7 +23,7 @@ const Menu = () => {
                         />
                     </div>
                 }
-                model={items}
+                model={connectedUser ? items : null}
                 end={
                     <div className="flex">
                         <OnBoard />
@@ -56,6 +58,11 @@ const items = [
         label: 'Buildings',
         icon: 'pi pi-fw pi-building',
         command: () => window.location.href = "/buildings"
+    },
+    {
+        label: 'Admin',
+        icon: 'pi pi-fw pi-building',
+        command: () => window.location.href = "/admin"
     }
 ];
 

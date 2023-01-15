@@ -5,6 +5,7 @@ import offerSlice from "./offer/offer.slice";
 import userSlice from "./user/user.slice";
 import storage from 'redux-persist/lib/storage';
 import {persistReducer, persistStore} from 'redux-persist';
+import toastSlice from "./toast/toast.slice";
 
 const persistConfig = {
     key: 'root',
@@ -16,6 +17,7 @@ const persistedReducer = persistReducer(persistConfig, combineReducers({
     board: boardSlice,
     offer: offerSlice,
     user: userSlice,
+    toast: toastSlice,
 }))
 
 export const store = configureStore({

@@ -5,14 +5,14 @@ import {Divider} from "primereact/divider";
 import DatatableBuilding from "../shared/datatable-building";
 import ToolbarBuilding from "./toolbar-building";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {getBuildings} from "../../store/building/building.slice";
+import {getAllBuildings} from "../../store/building/building.slice";
 
 const MarketBuilding = () => {
     const dispatch = useAppDispatch()
     const buildings = useAppSelector(state => state.building.entities);
 
     useEffect(() => {
-        dispatch(getBuildings())
+        dispatch(getAllBuildings())
 
         // TODO https://web3js.readthedocs.io/en/v1.2.7/web3-eth-subscribe.html
         // window.web3.eth.subscribe

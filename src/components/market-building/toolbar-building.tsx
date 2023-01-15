@@ -1,5 +1,5 @@
 import "./toolbar-building.css";
-import React, {ReactElement, useState} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import {Toolbar} from "primereact/toolbar";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
@@ -10,7 +10,7 @@ import {Message} from "primereact/message";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {createBuilding,  updateBuilding} from "../../store/building/building.slice";
 import { isOwnerBuildingTaken} from "../shared/file-utils";
-import {getPolyFactory} from "../../contract";
+import {getContractPolyFactory} from "../../contract";
 
 const ToolbarBuilding = () => {
     const dispatch = useAppDispatch();
@@ -22,16 +22,16 @@ const ToolbarBuilding = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
+    useEffect(() => {
+        console.log(building)
+    }, [building]);
+
+
     return (
         <div className="ToolbarBuilding">
             <Toolbar
                 className="p-2 mb-3"
                 right={<>
-                    <Button
-                        label="Create a building"
-                        icon="pi pi-plus"
-                        onClick={handleCreateBuilding}
-                    />
                     <Button
                         label="Create an auction"
                         icon="pi pi-plus"
@@ -75,23 +75,8 @@ const ToolbarBuilding = () => {
 
     function dropDownItemTemplate(option): ReactElement {
         return (
-            <div>{`${option.id} : ${option.name}`}</div>
+            <div>{`${option.name} [${option.id}]`}</div>
         )
-    }
-
-    function handleCreateBuilding() {
-        const now = Date.now()
-
-
-        const newBuilding: CreateBuilding = {
-            name: "",
-            price: 1,
-            isBuyable: false,
-            owner: null,
-            lastUpdateDate: now.toString()
-        }
-
-        dispatch(createBuilding(newBuilding))
     }
 
     function footer() {
@@ -133,7 +118,7 @@ const ToolbarBuilding = () => {
         console.log('putToAuction')
         console.log(buildings)
         //dispatch(putBuildingToAuction(building.id, building.price))
-        getPolyFactory().then(({contract}) => {
+        getContractPolyFactory().then(({contract}) => {
             if (!contract) {
                 console.log("contract is null")
                 return;

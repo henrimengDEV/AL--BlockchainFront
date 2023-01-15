@@ -9,9 +9,14 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
     return (
         <DataTable className="custom-datatable" value={props.buildinds} responsiveLayout="scroll" cellSelection>
             <Column
+                field="id"
+                header="id"
+                sortable
+            />
+            <Column
                 field="name"
                 header="Name"
-                body={name}
+                // body={name}
                 sortable
             />
             <Column

@@ -1,13 +1,13 @@
-import "./app.css";
+import "./home.css";
+import {useAppSelector} from "../../app/hooks";
+import bitCoin from "../../assets/undraw_bitcoin.png";
 import React from "react";
-import bitCoin from "./assets/undraw_bitcoin.png";
-import {useAppSelector} from "./app/hooks";
 
-const App = () => {
+const Home = () => {
     const connectedUser = useAppSelector(state => state.user.connectedUser)
 
     return (
-        <div className="App">
+        <div className="Home">
             {connectedUser != null
                 ? <div>
                     Welcome <strong>{connectedUser.username}</strong> !
@@ -19,4 +19,4 @@ const App = () => {
     )
 }
 
-export default App
+export default Home

@@ -29,11 +29,6 @@
     justify-content: center;
 }
 
-#root {
-    display: flex;
-    flex-direction: column;
-}
-
 .customer-badge {
     border-radius: 2px;
     padding: 0.25em 0.5rem;

@@ -1,19 +1,22 @@
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import App from "./App";
 import MarketBuilding from "./components/market-building/market-building";
 import React from "react";
 import MarketBoard from "./components/market-board/market-board";
 import DetailsBuilding from "./components/details-building/details-building";
 import Profile from "./components/profile/profile";
 import RouterGuard from "./router.guard";
+import Admin from "./components/admin/admin";
+import Home from "./components/home/home";
 
 
-const Router = () => <RouterProvider router={router} />
+const Router = () => {
+    return <RouterProvider router={router}/>;
+}
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App />,
+        element: <Home />,
     },
     {
         path: "/buildings",
@@ -30,6 +33,10 @@ const router = createBrowserRouter([
     {
         path: "/profile/:address",
         element: <RouterGuard children={<Profile />} />,
+    },
+    {
+        path: "/admin",
+        element: <RouterGuard children={<Admin />} />,
     },
 ]);
 

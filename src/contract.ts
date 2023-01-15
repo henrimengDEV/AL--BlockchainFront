@@ -1,6 +1,18 @@
-import { ethers } from "ethers";
+import {ethers} from "ethers";
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+export const getContractDiceContract = async () => {
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(diceContractAddress, diceContractAbi, signer);
+    return { signer: signer, contract: contract };
+};
+
+export const getContractPolyFactory = async () => {
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(polyFactoryAddress, polyFactoryAbi, signer);
+    return { signer: signer, contract: contract };
+};
 
 //
 
@@ -11,12 +23,6 @@ const diceContractAbi = [
     "function getBalance() view returns (uint256)",
     "function rollDice() returns (uint256)"
 ];
-
-export const getDiceContract = async () => {
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(diceContractAddress, diceContractAbi, signer);
-    return { signer: signer, contract: contract };
-};
 
 //
 
@@ -63,10 +69,4 @@ const polyFactoryAbi = [
     "function transferOwnership(address newOwner)",
     "function uri(uint256) view returns (string)"
 ];
-
-export const getPolyFactory = async () => {
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(polyFactoryAddress, polyFactoryAbi, signer);
-    return { signer: signer, contract: contract };
-};
 

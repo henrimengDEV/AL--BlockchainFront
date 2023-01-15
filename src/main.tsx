@@ -1,28 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import Menu from "./components/menu/menu";
-import Router from "./router";
 import {Provider} from "react-redux";
 import {persistor, store} from "./store/store";
 import {PersistGate} from 'redux-persist/integration/react';
-import {ConfirmDialog} from "primereact/confirmdialog";
+import App from "./app";
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.Fragment>
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <Menu />
-                <Router />
-                <ConfirmDialog style={{backgroundColor: 'red'}} />
+                <App/>
             </PersistGate>
         </Provider>
     </React.Fragment>,
 )
-
-// ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-//     <Provider store={store}>
-//         <Menu />
-//         <Router />
-//     </Provider>
-// )

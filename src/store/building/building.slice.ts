@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Building, CreateBuilding} from "./building.model";
-import {getPolyFactory} from "../../contract";
+import {getContractPolyFactory} from "../../contract";
 import {convertBigNumberToNumber, getBuildingNameType} from "../../components/shared/file-utils";
 
 
@@ -34,7 +34,7 @@ const buildingSlice = createSlice({
             state.entities[index] = action.payload
         },
         createBuilding(state, action: PayloadAction<CreateBuilding>) {
-            getPolyFactory().then(({contract: contract}) => {
+            getContractPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
                     console.log("contract is null")
                     return;
@@ -47,16 +47,16 @@ const buildingSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(getBuildings.fulfilled, (state, action) => {
+        builder.addCase(getAllBuildings.fulfilled, (state, action) => {
             state.entities = action.payload
         })
     }
 })
 
-export const getBuildings = createAsyncThunk(
+export const getAllBuildings = createAsyncThunk(
     'building/getBuildings',
     async () => {
-        return await getPolyFactory().then(({contract}) => {
+        return await getContractPolyFactory().then(({contract}) => {
             if (!contract) {
                 console.log("contract is null")
                 return;

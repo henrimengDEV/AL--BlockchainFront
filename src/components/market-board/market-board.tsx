@@ -17,7 +17,6 @@ const MarketBoard = () => {
 
     return (
         <div className="Market">
-            <Button onClick={create}>create</Button>
             <DataTable className="custom-datatable" value={boards} responsiveLayout="scroll" cellSelection>
                 <Column
                     field="id"
@@ -46,14 +45,6 @@ const MarketBoard = () => {
             </DataTable>
         </div>
     );
-
-    function create() {
-        dispatch(createBoard({
-            name: "test",
-            buyIn: 1,
-            blind: 2
-        }))
-    }
 
     function name(board: Board) {
         return (
