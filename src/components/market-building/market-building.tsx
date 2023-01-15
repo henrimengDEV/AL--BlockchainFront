@@ -19,7 +19,7 @@ const MarketBuilding = () => {
     }, [])
 
     return (
-        <div className="Market">
+        <div className="MarketBuilding">
 
             <Divider type="dashed">
                 <div className="inline-flex align-items-center text-theme">

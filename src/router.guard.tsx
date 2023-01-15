@@ -6,12 +6,6 @@ import {provider} from "./contract";
 const RouterGuard = (props: any) => {
     const connectedUser = useAppSelector(state => state.user.connectedUser)
 
-    // useEffect(() => {
-    //     console.log(provider)
-    //     console.log(window.ethereum)
-    // }, []);
-
-
     if (connectedUser == null) {
         return <Navigate to={"/"} />
     } else {

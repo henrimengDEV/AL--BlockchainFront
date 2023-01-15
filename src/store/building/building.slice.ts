@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Building, CreateBuilding} from "./building.model";
+import {Building, CreateBuildingModel} from "./building.model";
 import {getContractPolyFactory} from "../../contract";
-import {convertBigNumberToNumber, getBuildingNameType} from "../../components/shared/file-utils";
+import {convertBigNumberToNumber, getBuildingNameType, getErrorMessage} from "../../components/shared/file-utils";
 
 
 interface BuildingState {
@@ -21,28 +21,26 @@ const buildingSlice = createSlice({
         getBuildingById(state, action: PayloadAction<number>) {
             state.entity = state.entities.find(building => building.id === action.payload);
         },
-        setBuildings(state, action: PayloadAction<Building[]>) {
-            console.log('setBuildings')
-            console.table(action.payload)
-            return {
-                ...state,
-                entities: action.payload
-            }
-        },
         updateBuilding(state, action: PayloadAction<Building>) {
             const index = state.entities.findIndex(state => state.name === action.payload.name)
             state.entities[index] = action.payload
         },
-        createBuilding(state, action: PayloadAction<CreateBuilding>) {
+        createBuilding(_, action: PayloadAction<{ building: CreateBuildingModel, onError: (error: string) => void }>) {
             getContractPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
-                    console.log("contract is null")
+                    console.error("contract is null")
                     return;
                 }
 
-                console.log(action.payload)
-
-                contract.createUniqueNFT("Baltic_Avenue", 0)
+                const newBuilding: CreateBuildingModel = action.payload.building
+                contract.createUniqueNFT(newBuilding.name, newBuilding.boardId)
+                    .then(
+                        res => {
+                        },
+                        err => {
+                            action.payload.onError(getErrorMessage(err))
+                        }
+                    )
             })
         }
     },
@@ -58,28 +56,25 @@ export const getAllBuildings = createAsyncThunk(
     async () => {
         return await getContractPolyFactory().then(({contract}) => {
             if (!contract) {
-                console.log("contract is null")
+                console.error("contract is null")
                 return;
             }
 
             return contract.getBuildings().then((result) => {
 
                 const newState = result.map(item => {
-                    console.log(item)
-
                     const building: Building = {
                         id: convertBigNumberToNumber(item.buildingId),
-                        name: getBuildingNameType(item.nameType) || 'name',
-                        price: convertBigNumberToNumber(item.price) || 1,
+                        name: getBuildingNameType(item.nameType),
+                        price: convertBigNumberToNumber(item.price),
                         owner: {username: 'foo', address: item.owner} || null,
                         isBuyable: item.isBuyable || false,
                         lastUpdateDate: item.lastUpdateDate || 'lastUpdateDate',
+                        borderId: convertBigNumberToNumber(item.boardId)
                     }
 
                     return building
                 })
-
-                console.log(newState)
 
                 return newState
             })
@@ -87,5 +82,5 @@ export const getAllBuildings = createAsyncThunk(
     }
 )
 
-export const {getBuildingById, setBuildings, updateBuilding, createBuilding} = buildingSlice.actions
+export const {getBuildingById, updateBuilding, createBuilding} = buildingSlice.actions
 export default buildingSlice.reducer

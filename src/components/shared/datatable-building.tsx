@@ -1,11 +1,21 @@
 import {Building} from "../../store/building/building.model";
 import {Link} from "react-router-dom";
 import {Button} from "primereact/button";
-import React from "react";
+import React, {useEffect} from "react";
 import {Column} from "primereact/column";
 import {DataTable} from "primereact/datatable";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {state} from "@web3-onboard/core/dist/store";
+import {getAllBoards} from "../../store/board/board.slice";
 
 const DatatableBuilding = (props: { buildinds: Building[] }) => {
+    const dispatch = useAppDispatch()
+    const boards = useAppSelector(state => state.board.entities);
+
+    useEffect(() => {
+        dispatch(getAllBoards())
+    }, []);
+
     return (
         <DataTable className="custom-datatable" value={props.buildinds} responsiveLayout="scroll" cellSelection>
             <Column
@@ -16,7 +26,7 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
             <Column
                 field="name"
                 header="Name"
-                // body={name}
+                body={name}
                 sortable
             />
             <Column
@@ -48,10 +58,12 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
     )
 
     function name(building: Building) {
+        const boardName = boards.find(board => board.id === building.borderId).name || ''
+
         return (
             <div className="Market__name">
-                <i className="pi pi-home" style={{'fontSize': '2em'}}></i>
-                {building.name}
+                <strong>{boardName}</strong>
+                [<small><i>{building.name}</i></small>]
             </div>
         )
     }
@@ -79,6 +91,6 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
             </Link>
             : ''
     }
-}
+};
 
 export default DatatableBuilding

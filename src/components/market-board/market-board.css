@@ -1,8 +1,8 @@
-.Market {
+.MarketBoard {
     margin: 1rem;
 }
 
-.Market__name {
+.MarketBoard__name {
     display: flex;
     align-items: center;
     gap: 1rem;

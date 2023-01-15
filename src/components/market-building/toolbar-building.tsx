@@ -22,11 +22,6 @@ const ToolbarBuilding = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        console.log(building)
-    }, [building]);
-
-
     return (
         <div className="ToolbarBuilding">
             <Toolbar
@@ -100,8 +95,6 @@ const ToolbarBuilding = () => {
         }
 
         setIsLoading(true)
-        // console.log(building)
-        // console.log(price)
 
         setTimeout(() => {
             reset()
@@ -115,16 +108,13 @@ const ToolbarBuilding = () => {
     }
 
     function putToAuction() {
-        console.log('putToAuction')
-        console.log(buildings)
         //dispatch(putBuildingToAuction(building.id, building.price))
         getContractPolyFactory().then(({contract}) => {
             if (!contract) {
-                console.log("contract is null")
+                console.error("contract is null")
                 return;
             }
 
-            console.log(building)
             contract.putBuildingToAuction(building.id, price);
         })
     }

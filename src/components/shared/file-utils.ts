@@ -26,26 +26,48 @@ export function isOwner(address: string, connectedUser: User): boolean {
     return address.toLowerCase() === connectedUser?.address
 }
 
+// export enum BuildingNameType {
+//     MEDITERRANEAN = "Mediterranean_Avenue",
+//     BALTIC = "Baltic_Avenue",
+//     ORIENTAL = "Oriental_Avenue",
+//     VERMONT = "Vermont_Avenue",
+//     CONNECTICUT = "Connecticut_Avenue",
+//     STATES = "States_Avenue",
+//     VIRGINIA = "Virginia_Avenue",
+//     TENNESSEE = "Tennessee_Avenue",
+// }
+
+export const buildingNameTypes = [
+    {label: "MEDITERRANEAN", value: "Mediterranean_Avenue"},
+    {label: "BALTIC", value: "Baltic_Avenue"},
+    {label: "ORIENTAL", value: "Oriental_Avenue"},
+    {label: "VERMONT", value: "Vermont_Avenue"},
+    {label: "CONNECTICUT", value: "Connecticut_Avenue"},
+    {label: "STATES", value: "States_Avenue"},
+    {label: "VIRGINIA", value: "Virginia_Avenue"},
+    {label: "TENNESSEE", value: "Tennessee_Avenue"},
+]
+
 export function getBuildingNameType(buildingEnum: number): string {
     switch (buildingEnum) {
         case 0:
-            return "Mediterranean Avenue";
+            return "Mediterranean_Avenue";
         case 1:
-            return "Baltic Avenue";
+            return "Baltic_Avenue";
         case 2:
-            return "Oriental Avenue";
+            return "Oriental_Avenue";
         case 3:
-            return "Vermont Avenue";
+            return "Vermont_Avenue";
         case 4:
-            return "Connecticut Avenue";
+            return "Connecticut_Avenue";
         case 5:
-            return "States Avenue";
+            return "States_Avenue";
         case 6:
-            return "Virginia Avenue";
+            return "Virginia_Avenue";
         case 7:
-            return "Tennessee Avenue";
+            return "Tennessee_Avenue";
         default:
-            return;
+            return "Mediterranean_Avenue";
     }
 }
 

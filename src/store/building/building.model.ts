@@ -7,12 +7,10 @@ export interface Building {
     owner: User
     isBuyable: boolean
     lastUpdateDate: string
+    borderId: number
 }
 
-export interface CreateBuilding {
+export interface CreateBuildingModel {
     name: string
-    price: number
-    owner: User
-    isBuyable: boolean
-    lastUpdateDate: string
+    boardId: number
 }

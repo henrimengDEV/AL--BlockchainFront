@@ -80,14 +80,6 @@ const OnBoard = () => {
                     username: value[0].accounts[0].ens?.name || '',
                     address: value[0].accounts[0].address
                 }))
-
-                // getDiceContract().then(({ contract}) => {
-                //     if (contract) {
-                //         contract.rollDice().then((result) => {
-                //             console.log(BigNumber.from(result).toNumber());
-                //         });
-                //     }
-                // });
             });
         } catch (error) {
             console.error(error);

@@ -1,9 +1,3 @@
 .Market {
     margin: 1rem;
 }
-
-.Market__name {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}

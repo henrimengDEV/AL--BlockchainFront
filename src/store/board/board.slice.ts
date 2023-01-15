@@ -23,7 +23,7 @@ const boardSlice = createSlice({
         createBoard(state, action: PayloadAction<{ newBoard: Board, onError: (error: string) => void }>) {
             getContractPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
-                    console.log("contract is null")
+                    console.error("contract is null")
                     return;
                 }
 
@@ -33,8 +33,6 @@ const boardSlice = createSlice({
                         res => {
                         },
                         err => {
-                            console.log("createBoard")
-                            console.log(err)
                             action.payload.onError(getErrorMessage(err))
                         }
                     )
@@ -53,7 +51,7 @@ export const getAllBoards = createAsyncThunk(
     async () => {
         return await getContractPolyFactory().then(({contract}) => {
             if (!contract) {
-                console.log("contract is null")
+                console.error("contract is null")
                 return;
             }
 

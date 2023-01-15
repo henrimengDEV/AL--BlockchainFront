@@ -15,7 +15,7 @@ const MarketBoard = () => {
     }, [])
 
     return (
-        <div className="Market">
+        <div className="MarketBoard">
             <DataTable className="custom-datatable" value={boards} responsiveLayout="scroll" cellSelection>
                 <Column
                     field="id"
@@ -47,7 +47,7 @@ const MarketBoard = () => {
 
     function name(board: Board) {
         return (
-            <div className="Market__name">
+            <div className="MarketBoard__name">
                 <i className="pi pi-box" style={{'fontSize': '2em'}}></i>
                 {board.name}
             </div>
