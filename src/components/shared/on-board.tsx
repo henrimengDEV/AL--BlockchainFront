@@ -5,9 +5,6 @@ import Onboard from "@web3-onboard/core";
 import {Button} from "primereact/button";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {changeConnectedUser, resetConnectedUser} from "../../store/user/user.slice";
-import {getContractDiceContract} from "../../contract";
-import {useState} from "react";
-import {BigNumber} from "ethers";
 
 
 const coinbaseWalletSdk = coinbaseWalletModule();

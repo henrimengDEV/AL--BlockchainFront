@@ -2,12 +2,11 @@ import "./profile.css"
 import inProgress from "../../assets/undraw_in_progress.png";
 import React, {useState} from "react";
 import {useParams} from "react-router-dom";
-import {store} from "../../store/store";
 import {TabPanel, TabView} from "primereact/tabview";
 import DatatableBuilding from "../shared/datatable-building";
 import Clipboard from "../shared/clipboard/clipboard";
 import {Button} from "primereact/button";
-import {areAddressesEquals, copyInClipboard, isOwner} from "../shared/file-utils";
+import {areAddressesEquals, copyInClipboard} from "../shared/file-utils";
 import {useAppSelector} from "../../app/hooks";
 
 const Profile = () => {

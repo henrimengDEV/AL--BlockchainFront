@@ -5,11 +5,11 @@ import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
 import {InputNumber} from "primereact/inputnumber";
 import {Dropdown} from "primereact/dropdown";
-import {Building, CreateBuilding} from "../../store/building/building.model";
+import {Building} from "../../store/building/building.model";
 import {Message} from "primereact/message";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {createBuilding,  updateBuilding} from "../../store/building/building.slice";
-import { isOwnerBuildingTaken} from "../shared/file-utils";
+import {updateBuilding} from "../../store/building/building.slice";
+import {isOwnerBuildingTaken} from "../shared/file-utils";
 import {getContractPolyFactory} from "../../contract";
 
 const ToolbarBuilding = () => {

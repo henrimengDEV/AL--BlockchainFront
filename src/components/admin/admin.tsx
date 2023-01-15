@@ -1,15 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
 import {createBuilding} from "../../store/building/building.slice";
 import {useAppDispatch, useAppSelector, useAppState, useAppStateBoolean} from "../../app/hooks";
 import {createBoard} from "../../store/board/board.slice";
-import {confirmDialog} from "primereact/confirmdialog";
 import {Dialog} from "primereact/dialog";
 import {InputText} from "primereact/inputtext";
-import {isOwnerBuildingTaken} from "../shared/file-utils";
 import {Dropdown} from "primereact/dropdown";
-import {Toast} from "primereact/toast";
 import {setToastEntity} from "../../store/toast/toast.slice";
 
 const AdminStyle = {
@@ -52,11 +49,13 @@ const Admin = () => {
                 buyIn: 1,
                 blind: 2
             },
-            onError: (error) => dispatch(setToastEntity({
-                severity: 'error',
-                summary: 'Error',
-                detail: error
-            }))
+            onError: (error) => {
+                dispatch(setToastEntity({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: error
+                }))
+            }
         }))
     }
 
@@ -75,10 +74,6 @@ const Admin = () => {
         const [visible, toggleVisible] = useAppStateBoolean(false);
         const [board, setBoard] = useAppState('');
         const [name, setName] = useAppState('');
-
-        useEffect(() => {
-            console.log(name)
-        }, [name]);
 
         return (
             <Dialog

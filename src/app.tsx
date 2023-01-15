@@ -8,30 +8,34 @@ import {useAppDispatch, useAppSelector} from "./app/hooks";
 import {getContractPolyFactory} from "./contract";
 import {getAllBuildings} from "./store/building/building.slice";
 import {getAllBoards} from "./store/board/board.slice";
-import {setToastEntity} from "./store/toast/toast.slice";
+import {resetToastValue, setToastEntity} from "./store/toast/toast.slice";
+import {getTransactionHashFromEvent} from "./components/shared/file-utils";
 
 
 const App = () => {
-    const toast = useRef(null)
+    const toastRef = useRef(null)
     const dispatch = useAppDispatch()
-    const toastEntity = useAppSelector(state => state.toast.entity)
+    const toastEntity = useAppSelector(state => state.toast.value)
 
     useEffect(() => {
         getContractPolyFactory().then(({contract}) => {
-            contract.on("NewBuilding", () => {
+            contract.on("NewBuilding", (...args) => {
                 dispatch(getAllBuildings())
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'New building created !'
+                    detail: 'New building created !',
+                    transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
-            contract.on("NewBoard", () => {
+            contract.on("NewBoard", (...args) => {
+
                 dispatch(getAllBoards())
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'New board created !'
+                    detail: 'New board created !',
+                    transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
         })
@@ -46,12 +50,16 @@ const App = () => {
             <Menu />
             <Router />
             <ConfirmDialog style={{backgroundColor: 'red'}} />
-            <Toast ref={toast} position="bottom-left" />
+            <Toast ref={toastRef} position="bottom-left" />
         </div>
     )
 
     function showToast(state: ToastMessage) {
-        toast.current.show(state);
+        const toast: Toast = toastRef.current
+        toast.show(state)
+        setTimeout(() => {
+            dispatch(resetToastValue())
+        }, 5000)
     }
 }
 

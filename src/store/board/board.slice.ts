@@ -2,8 +2,6 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Board} from "./board.model";
 import {getContractPolyFactory} from "../../contract";
 import {convertBigNumberToNumber, getErrorMessage} from "../../components/shared/file-utils";
-import {useAppDispatch} from "../../app/hooks";
-import {setToastEntity} from "../toast/toast.slice";
 
 interface BoardState {
     entities: Board[]
@@ -22,7 +20,7 @@ const boardSlice = createSlice({
     name: "board",
     initialState,
     reducers: {
-        createBoard(state, action: PayloadAction<{newBoard: Board, onError: (error: string) => void}>) {
+        createBoard(state, action: PayloadAction<{ newBoard: Board, onError: (error: string) => void }>) {
             getContractPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
                     console.log("contract is null")
@@ -32,11 +30,14 @@ const boardSlice = createSlice({
                 const newBoard: Board = action.payload.newBoard
                 contract.createBoard(newBoard.name, newBoard.buyIn, newBoard.blind)
                     .then(
-                    res => {},
-                    err => {
-                        action.payload.onError(getErrorMessage(err))
-                    }
-                )
+                        res => {
+                        },
+                        err => {
+                            console.log("createBoard")
+                            console.log(err)
+                            action.payload.onError(getErrorMessage(err))
+                        }
+                    )
             })
         }
     },

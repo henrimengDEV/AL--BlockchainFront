@@ -61,3 +61,7 @@ export function getErrorMessage(source: any) {
 
     return error
 }
+
+export function getTransactionHashFromEvent(event: any) {
+    return event[4].transactionHash
+}

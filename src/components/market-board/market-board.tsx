@@ -4,8 +4,7 @@ import {DataTable} from "primereact/datatable"
 import {Column} from "primereact/column"
 import {Board} from "../../store/board/board.model"
 import {useAppDispatch, useAppSelector} from "../../app/hooks"
-import {createBoard, getAllBoards} from "../../store/board/board.slice";
-import {Button} from "primereact/button";
+import {getAllBoards} from "../../store/board/board.slice";
 
 const MarketBoard = () => {
     const boards = useAppSelector(state => state.board.entities)
