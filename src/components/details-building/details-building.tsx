@@ -8,7 +8,6 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {getContractPolyFactory} from "../../contract";
 import {getBuildingById} from "../../store/building/building.slice";
 import {isOwner} from "../shared/file-utils";
-import {setToastEntity} from "../../store/toast/toast.slice";
 
 const DetailsBuilding = () => {
     let {id} = useParams();
@@ -18,6 +17,7 @@ const DetailsBuilding = () => {
     const connectedUser = useAppSelector(state => state.user.connectedUser)
     const [activeIndex, setActiveIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         dispatch(getBuildingById(+id))
@@ -112,20 +112,7 @@ const DetailsBuilding = () => {
 
     function onSubmit() {
         if (building == null) {
-            dispatch(setToastEntity({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'A building is required to create an auction !'
-            }))
-            return
-        }
-
-        if (isOwner(building.owner.address, connectedUser)) {
-            dispatch(setToastEntity({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Impossible to buy your own building ...'
-            }))
+            setError("A building is required to create an auction !")
             return
         }
 
