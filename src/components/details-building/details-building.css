@@ -1,6 +1,8 @@
 .DetailsBuilding {
+    flex: 1;
     display: flex;
     flex-direction: row;
+    padding: 2rem;
 }
 
 .DetailsBuilding__left {
@@ -12,6 +14,7 @@
 
 .DetailsBuilding__left > img {
     width: 70%;
+    border-radius: 50%;
 }
 
 .DetailsBuilding__right {

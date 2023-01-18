@@ -23,7 +23,7 @@ export function isOwnerBuildingBuyable(building: Building, connectedUser: User):
 }
 
 export function isOwner(address: string, connectedUser: User): boolean {
-    return address.toLowerCase() === connectedUser?.address
+    return address != null && address.toLowerCase() === connectedUser?.address
 }
 
 export enum BuildingNameType {
