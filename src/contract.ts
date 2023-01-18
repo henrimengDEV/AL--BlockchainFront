@@ -2,12 +2,6 @@ import {ethers} from "ethers";
 
 export const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-export const getContractDiceContract = async () => {
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(diceContractAddress, diceContractAbi, signer);
-    return { signer: signer, contract: contract };
-};
-
 export const getContractPolyFactory = async () => {
     const signer = provider.getSigner();
     const contract = new ethers.Contract(polyFactoryAddress, polyFactoryAbi, signer);
@@ -16,17 +10,7 @@ export const getContractPolyFactory = async () => {
 
 //
 
-const diceContractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-const diceContractAbi = [
-    "constructor()",
-    "event RequestRandomness(bytes32 indexed requestId, uint256 seed)",
-    "function getBalance() view returns (uint256)",
-    "function rollDice() returns (uint256)"
-];
-
-//
-
-const polyFactoryAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const polyFactoryAddress = "0x0b306bf915c4d645ff596e518faf3f9669b97016";
 const polyFactoryAbi = [
     "constructor()",
     "event ApprovalForAll(address indexed account, address indexed operator, bool approved)",
@@ -62,6 +46,7 @@ const polyFactoryAbi = [
     "function owner() view returns (address)",
     "function putBuildingToAuction(uint256 _buildingId, uint256 _price)",
     "function renounceOwnership()",
+    "function rollDice(uint256 _seed) view returns (uint256)",
     "function safeBatchTransferFrom(address from, address to, uint256[] ids, uint256[] amounts, bytes data)",
     "function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes data)",
     "function setApprovalForAll(address operator, bool approved)",

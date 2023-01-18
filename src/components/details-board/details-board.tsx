@@ -70,6 +70,7 @@ const DetailsBoard = () => {
                 <div className="customer-badge status-qualified">MINE</div>
                 <div className="customer-badge status-new">BUYABLE</div>
                 <div className="customer-badge status-unqualified">TAKEN</div>
+                <button onClick={() => setConnectedPlayerPosition(3)}>click me</button>
             </div>
 
             <h3>{board.name}</h3>

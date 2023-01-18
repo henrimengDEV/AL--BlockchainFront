@@ -1,12 +1,13 @@
 import "./dice.css"
 import React, {useRef, useState} from "react";
-import {getContractDiceContract} from "../../../contract";
+import {getContractPolyFactory} from "../../../contract";
 import {convertBigNumberToNumber} from "../file-utils";
 import {useAppStateBoolean} from "../../../app/hooks";
 import {Button} from "primereact/button";
+import {ethers} from "ethers";
 
 interface DiceProps {
-    onHide: () => void
+    onHide: () => void,
     onPlay: (value: number) => void
 }
 
@@ -83,9 +84,6 @@ const Dice = (props: DiceProps) => {
     async function rollDice() {
         toggleIsLoading()
         let random = await getRandomDice()
-        if (random === 0) random = 3
-
-        // let random = Math.floor(Math.random() * 6 + 1)
 
         const dice: HTMLElement = diceRef.current;
         toggleClasses(dice);
@@ -99,10 +97,12 @@ const Dice = (props: DiceProps) => {
     };
 
     async function getRandomDice() {
-        return await getContractDiceContract()
+        return await getContractPolyFactory()
             .then(({contract: contract}) => {
-                return contract.rollDice()
-                    .then(response => convertBigNumberToNumber(response.value))
+                return contract.rollDice(Date.now())
+                    .then(response => {
+                        return convertBigNumberToNumber(response)
+                    })
             })
     }
 }

@@ -51,6 +51,7 @@ export const getAllBoards = createAsyncThunk(
             }
 
             return contract.getBoards().then((result) => {
+                console.log("result", result)
                 const newBoardsState: Board[] = result.map(item => {
                     const newBoard: Board = {
                         id: convertBigNumberToNumber(item.boardId),
