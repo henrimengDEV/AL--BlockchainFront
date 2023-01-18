@@ -8,12 +8,7 @@ interface BoardState {
 }
 
 const initialState: BoardState = {
-    entities: [
-        {id: 1, name: 'board_1', blind: 1, buyIn: 1},
-        {id: 2, name: 'board_2', blind: 3, buyIn: 3},
-        {id: 3, name: 'board_3', blind: 2, buyIn: 2},
-        {id: 4, name: 'board_4', blind: 10, buyIn: 10}
-    ]
+    entities: []
 }
 
 const boardSlice = createSlice({
@@ -61,7 +56,8 @@ export const getAllBoards = createAsyncThunk(
                         id: convertBigNumberToNumber(item.boardId),
                         name: item.name,
                         blind: item.blind | 1,
-                        buyIn: item.buyIn | 1
+                        buyIn: item.buyIn | 1,
+                        playerStates: []
                     }
                     return newBoard
                 })

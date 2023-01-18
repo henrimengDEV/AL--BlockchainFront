@@ -1,5 +1,5 @@
 import "./details-board.css"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BuildingNameType, isOwner} from "../shared/file-utils";
 import inProgress from '../../assets/undraw_building.png'
 import {useAppSelector, useAppStateBoolean} from "../../app/hooks";
@@ -7,6 +7,7 @@ import {Navigate, useParams} from "react-router-dom";
 import {Dialog} from "primereact/dialog";
 import Dice from "../shared/dice/dice";
 import {Building} from "../../store/building/building.model";
+import {Avatar} from "primereact/avatar";
 
 
 const DetailsBoard = () => {
@@ -21,6 +22,16 @@ const DetailsBoard = () => {
     const buildingsTaken: string[] = buildings.filter(it => !it.isBuyable).map(it => it.name)
     const myBuildings: string[] = buildings.filter(it => isOwner(it.owner.address, connectedUser)).map(it => it.name)
 
+    const [playerStates, setPlayerStates] = useState([]);
+
+    useEffect(() => {
+        setPlayerStates([{userAddress: connectedUser.address, position: 0}])
+    }, []);
+
+    useEffect(() => {
+        console.log(playerStates)
+    }, [playerStates]);
+
     if (board == null) return <Navigate to={"/boards"} />
     return (
         <div className="Coinpoly">
@@ -29,6 +40,7 @@ const DetailsBoard = () => {
                 <div className="customer-badge status-qualified">MINE</div>
                 <div className="customer-badge status-new">BUYABLE</div>
                 <div className="customer-badge status-unqualified">TAKEN</div>
+                <button onClick={() => setConnectedPlayerPosition(3)}>click me</button>
             </div>
 
             <h3>{board.name}</h3>
@@ -55,13 +67,29 @@ const DetailsBoard = () => {
                             <div className="Coinpoly__wrapper">
                                 <img src={inProgress} alt="building" />
                                 <p className={`customer-badge ${getBuildingStatus(item)}`}>{item}</p>
+                                <div className="Coinpoly__players">
+                                    {
+                                        playerStates.filter(it => it.position === index).map(it =>
+                                            <>
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
+                                            </>
+                                        )
+                                    }
+                                </div>
                             </div>
                         </button>
                     )
                 }
             </div>
 
-            {isDiceVisible ? <Dice  onHide={toggleDiceVisible}/> : ''}
+            {isDiceVisible ? <Dice onPlay={setConnectedPlayerPosition} onHide={toggleDiceVisible} /> : ''}
 
             <Dialog
                 visible={isDialogVisible}
@@ -101,6 +129,16 @@ const DetailsBoard = () => {
         if (myBuildings.includes(source)) return 'status-qualified'
         if (buildingsTaken.includes(source)) return 'status-unqualified'
         return 'status-new'
+    }
+
+    function setConnectedPlayerPosition(value: number) {
+        setPlayerStates(prev => [
+            ...prev.filter(it => it.userAddress !== connectedUser.address),
+            {
+                userAddress: connectedUser.address,
+                position: prev.find(it => it.userAddress === connectedUser.address).value + value
+            }
+        ])
     }
 
 }
