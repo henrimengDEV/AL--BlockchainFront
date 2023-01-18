@@ -8,6 +8,7 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {getContractPolyFactory} from "../../contract";
 import {getBuildingById} from "../../store/building/building.slice";
 import {isOwner} from "../shared/file-utils";
+import {ethers} from "ethers";
 
 const DetailsBuilding = () => {
     let {id} = useParams();
@@ -129,7 +130,7 @@ const DetailsBuilding = () => {
                 return;
             }
 
-            contract.buyBuilding(id, {value: building.price});
+            contract.buyBuilding(id, {value: ethers.utils.parseEther(building.price.toString())});
         }).finally(() => setIsLoading(false))
     }
 }
