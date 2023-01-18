@@ -1,41 +1,59 @@
 import "./details-board.css"
 import React, {ReactElement, useEffect, useState} from "react";
-import {BuildingNameType, isOwner} from "../shared/file-utils";
+import {BuildingNameType, isOwner, onlyUnique} from "../shared/file-utils";
 import inProgress from '../../assets/undraw_building.png'
-import {useAppSelector, useAppStateBoolean} from "../../app/hooks";
+import {useAppDispatch, useAppSelector, useAppStateBoolean} from "../../app/hooks";
 import {Navigate, useParams} from "react-router-dom";
 import {Dialog} from "primereact/dialog";
 import Dice from "../shared/dice/dice";
 import {Building} from "../../store/building/building.model";
 import {Avatar} from "primereact/avatar";
 import {getImageProfile} from "../../app/constants";
+import {
+    getCoinpolyEntityByBoardId,
+    setCoinpolyByBoarId,
+} from "../../store/coinpoly/coinpoly.slice";
+import {Coinpoly, PlayerState} from "../../store/coinpoly/coinpoly.model";
 
 
 const DetailsBoard = () => {
     const {id} = useParams()
+    const dispatch = useAppDispatch()
     const [isDialogVisible, toggleDialogVisible] = useAppStateBoolean(false);
     const [isDiceVisible, toggleDiceVisible] = useAppStateBoolean(false);
     const [building, setBuilding] = useState<Building>(undefined);
 
+    const coinpoly = useAppSelector(state => state.coinpoly.entity)
+    const coinpolys = useAppSelector(state => state.coinpoly.entities)
     const connectedUser = useAppSelector(state => state.user.connectedUser)
     const board = useAppSelector(state => state.board.entities.find(it => it.id === +id))
-    const buildings = useAppSelector(state => state.building.entities.filter(it => it.boardId === +id))
-    const buildingsTaken: string[] = buildings.filter(it => !it.isBuyable).map(it => it.name)
-    const buildingsBuyable: string[] = buildings.filter(it => it.isBuyable).map(it => it.name)
-    const myBuildings: string[] = buildings.filter(it => isOwner(it.owner.address, connectedUser)).map(it => it.name)
-
-    const [playerStates, setPlayerStates] = useState([
-        {userAddress: connectedUser.address, position: 0, image: getImageProfile()},
-        {userAddress: connectedUser.address + 1, position: 1, image: getImageProfile()},
-        {userAddress: connectedUser.address + 2, position: 2, image: getImageProfile()},
-        {userAddress: connectedUser.address + 3, position: 3, image: getImageProfile()},
-        {userAddress: connectedUser.address + 4, position: 4, image: getImageProfile()},
-        {userAddress: connectedUser.address + 5, position: 5, image: getImageProfile()},
-    ]);
+    const buildingsByBoardId = useAppSelector(state => state.building.entities.filter(it => it.boardId === +id))
+    const buildingsTaken: string[] = buildingsByBoardId.filter(it => !it.isBuyable).map(it => it.name)
+    const buildingsBuyable: string[] = buildingsByBoardId.filter(it => it.isBuyable).map(it => it.name)
+    const myBuildings: string[] = buildingsByBoardId.filter(it => isOwner(it.owner.address, connectedUser)).map(it => it.name)
 
     useEffect(() => {
-        console.log(playerStates)
-    }, [playerStates]);
+        dispatch(setCoinpolyByBoarId({
+            boardId: +id,
+            playerStates: [
+                ...buildingsByBoardId.map(it => it.owner.address).filter(onlyUnique).map(it => {
+                    const previousPlayerState = coinpoly?.playerStates.find(it2 => it2.userAddress === it)
+
+                    const newPlayerState: PlayerState = {
+                        userAddress: it,
+                        position: previousPlayerState?.position || 0,
+                        image: getImageProfile()
+                    }
+
+                    return newPlayerState
+                })
+            ]
+        }))
+    }, []);
+
+    useEffect(() => {
+        dispatch(getCoinpolyEntityByBoardId(+id))
+    }, [coinpolys]);
 
     if (board == null) return <Navigate to={"/boards"} />
     return (
@@ -46,7 +64,7 @@ const DetailsBoard = () => {
                     You are
                     <Avatar
                         style={{height: '2rem', width: '2rem'}}
-                        image={playerStates.find(it => isOwner(it.userAddress, connectedUser)).image}
+                        image={coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser)).image}
                     />
                 </div>
                 <div className="customer-badge status-qualified">MINE</div>
@@ -77,12 +95,12 @@ const DetailsBoard = () => {
                     <button
                         key={`building_${indexBuilding}`}
                         onClick={() => {
-                            setBuilding(() => buildings.find(it => it.name === BuildingNameType[itemBuilding]))
+                            setBuilding(() => buildingsByBoardId.find(it => it.name === BuildingNameType[itemBuilding]))
                             toggleDialogVisible()
                         }}
                         className="Coinpoly__case"
                         style={{'--numero': indexBuilding + 1,} as React.CSSProperties}
-                        disabled={buildings.find(it => it.name === BuildingNameType[itemBuilding]) == null}
+                        disabled={buildingsByBoardId.find(it => it.name === BuildingNameType[itemBuilding]) == null}
                     >
                         <div className="Coinpoly__wrapper">
                             <img src={inProgress} alt="building" />
@@ -146,21 +164,28 @@ const DetailsBoard = () => {
     }
 
     function setConnectedPlayerPosition(value: number) {
-        const currentState = playerStates.find(it => it.userAddress === connectedUser.address)
-        setPlayerStates(prev => [
-            ...prev.filter(it => it.userAddress !== connectedUser.address),
-            {
-                ...currentState,
-                position: (currentState.position + value) % 8
-            }
-        ])
+        console.log(coinpoly.playerStates)
+        const previousState = coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser))
+
+        const newState: Coinpoly = {
+            ...coinpoly,
+            playerStates: [
+                ...coinpoly.playerStates.filter(it => !isOwner(it.userAddress, connectedUser)),
+                {
+                    ...previousState,
+                    position: (previousState.position + value) % 8
+                }
+            ]
+        }
+
+        dispatch(setCoinpolyByBoarId(newState))
     }
 
     function getPlayersByBuilding(buildingIndex: number): ReactElement {
 
         return <>
             {
-                playerStates.map((player, playerIndex) => {
+                coinpoly.playerStates.map((player, playerIndex) => {
                     if (player.position !== buildingIndex) return <div key={`avatar_${playerIndex}`}></div>
                     return <div style={{position: 'relative'}}>
                         <Avatar

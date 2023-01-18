@@ -86,6 +86,9 @@ export function getErrorMessage(source: any) {
     if (error.includes('User denied transaction signature'))
         return 'User denied transaction signature'
 
+    if (error.includes('Nonce too high'))
+        return 'Reset your metamask newbi'
+
     return error
 }
 
@@ -95,4 +98,8 @@ export function getTransactionHashFromEvent(event: any) {
 
 export function getAddress(address: string) {
     return `${address.substring(0, 5)}...${address.substring(address.length - 5, address.length)}`
+}
+
+export function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
 }

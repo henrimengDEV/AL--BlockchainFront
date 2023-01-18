@@ -6,6 +6,7 @@ import userSlice from "./user/user.slice";
 import storage from 'redux-persist/lib/storage';
 import {persistReducer, persistStore} from 'redux-persist';
 import toastSlice from "./toast/toast.slice";
+import coinpolySlice from "./coinpoly/coinpoly.slice";
 
 const persistConfig = {
     key: 'root',
@@ -18,6 +19,7 @@ const persistedReducer = persistReducer(persistConfig, combineReducers({
     offer: offerSlice,
     user: userSlice,
     toast: toastSlice,
+    coinpoly: coinpolySlice,
 }))
 
 export const store = configureStore({

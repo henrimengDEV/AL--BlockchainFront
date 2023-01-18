@@ -6,4 +6,5 @@ export interface Coinpoly {
 export interface PlayerState {
     userAddress: string
     position: number
+    image: string
 }
