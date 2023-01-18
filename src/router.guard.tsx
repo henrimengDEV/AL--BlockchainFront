@@ -1,7 +1,6 @@
 import {useAppSelector} from "./app/hooks";
-import React, {useEffect} from "react";
+import React from "react";
 import {Navigate} from "react-router-dom";
-import {provider} from "./contract";
 
 const RouterGuard = (props: any) => {
     const connectedUser = useAppSelector(state => state.user.connectedUser)
