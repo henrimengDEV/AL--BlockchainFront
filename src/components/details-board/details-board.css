@@ -87,12 +87,12 @@
     box-shadow: lightgray 0 0 0 3px;
 }
 
-.Coinpoly__wrapper > p {
+.Coinpoly__wrapper > div {
     position: absolute;
     bottom: 0;
     left: 50%;
 
-    transform: translate(-50%, 150%);
+    transform: translate(-50%, 100%);
 }
 
 .Coinpoly__wrapper > img {
@@ -101,12 +101,6 @@
 }
 
 .Coinpoly__players {
-    width: 200%;
-
-    position: absolute;
-    bottom: -80px;
-    left: -40px;
-
     display: flex;
     gap: 5px;
     flex-wrap: wrap;

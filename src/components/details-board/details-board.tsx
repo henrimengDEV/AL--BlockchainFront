@@ -8,6 +8,7 @@ import {Dialog} from "primereact/dialog";
 import Dice from "../shared/dice/dice";
 import {Building} from "../../store/building/building.model";
 import {Avatar} from "primereact/avatar";
+import {getImageProfile} from "../../app/constants";
 
 
 const DetailsBoard = () => {
@@ -22,11 +23,14 @@ const DetailsBoard = () => {
     const buildingsTaken: string[] = buildings.filter(it => !it.isBuyable).map(it => it.name)
     const myBuildings: string[] = buildings.filter(it => isOwner(it.owner.address, connectedUser)).map(it => it.name)
 
-    const [playerStates, setPlayerStates] = useState([]);
-
-    useEffect(() => {
-        setPlayerStates([{userAddress: connectedUser.address, position: 0}])
-    }, []);
+    const [playerStates, setPlayerStates] = useState([
+        {userAddress: connectedUser.address, position: 0, image: getImageProfile()},
+        {userAddress: connectedUser.address + 1, position: 1, image: getImageProfile()},
+        {userAddress: connectedUser.address + 2, position: 2, image: getImageProfile()},
+        {userAddress: connectedUser.address + 3, position: 3, image: getImageProfile()},
+        {userAddress: connectedUser.address + 4, position: 4, image: getImageProfile()},
+        {userAddress: connectedUser.address + 5, position: 5, image: getImageProfile()},
+    ]);
 
     useEffect(() => {
         console.log(playerStates)
@@ -37,10 +41,16 @@ const DetailsBoard = () => {
         <div className="Coinpoly">
             <div className="Coinpoly__legend">
                 <h3>Legends</h3>
+                <div style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
+                    You are
+                    <Avatar
+                        style={{height: '2rem', width: '2rem'}}
+                        image={playerStates.find(it => isOwner(it.userAddress, connectedUser)).image}
+                    />
+                </div>
                 <div className="customer-badge status-qualified">MINE</div>
                 <div className="customer-badge status-new">BUYABLE</div>
                 <div className="customer-badge status-unqualified">TAKEN</div>
-                <button onClick={() => setConnectedPlayerPosition(3)}>click me</button>
             </div>
 
             <h3>{board.name}</h3>
@@ -66,22 +76,29 @@ const DetailsBoard = () => {
                         >
                             <div className="Coinpoly__wrapper">
                                 <img src={inProgress} alt="building" />
-                                <p className={`customer-badge ${getBuildingStatus(item)}`}>{item}</p>
-                                <div className="Coinpoly__players">
-                                    {
-                                        playerStates.filter(it => it.position === index).map(it =>
-                                            <>
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            <Avatar style={{height: '1.2rem', width: '1.2rem'}} label="1" />
-                                            </>
-                                        )
-                                    }
+                                <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+                                    <p className={`customer-badge ${getBuildingStatus(item)}`}>{item}</p>
+                                    <div className="Coinpoly__players">
+                                        {
+                                            playerStates.map(player => {
+                                                if (player.position !== index) return <></>
+                                                return <Avatar
+                                                    style={
+                                                        isOwner(player.userAddress, connectedUser)
+                                                            ? {
+                                                                borderRadius: '50%',
+                                                                padding: '2px',
+                                                                border: '2px lightgrey solid',
+                                                                height: '2rem',
+                                                                width: '2rem'
+                                                            }
+                                                            : {height: '2rem', width: '2rem'}
+                                                    }
+                                                    image={player.image}
+                                                />
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </button>
@@ -132,11 +149,12 @@ const DetailsBoard = () => {
     }
 
     function setConnectedPlayerPosition(value: number) {
+        const currentState = playerStates.find(it => it.userAddress === connectedUser.address)
         setPlayerStates(prev => [
             ...prev.filter(it => it.userAddress !== connectedUser.address),
             {
-                userAddress: connectedUser.address,
-                position: prev.find(it => it.userAddress === connectedUser.address).value + value
+                ...currentState,
+                position: (currentState.position + value) % 8
             }
         ])
     }

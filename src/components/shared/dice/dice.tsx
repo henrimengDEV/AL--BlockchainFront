@@ -5,7 +5,12 @@ import {convertBigNumberToNumber} from "../file-utils";
 import {useAppStateBoolean} from "../../../app/hooks";
 import {Button} from "primereact/button";
 
-const Dice = (props: { onHide: () => void, onPlay: (value: number) => void}) => {
+interface DiceProps {
+    onHide: () => void
+    onPlay: (value: number) => void
+}
+
+const Dice = (props: DiceProps) => {
     const diceRef = useRef(null);
     const [hasPlayed, toggleHasPlayed] = useAppStateBoolean(false);
     const [isLoading, toggleIsLoading] = useAppStateBoolean(false);
