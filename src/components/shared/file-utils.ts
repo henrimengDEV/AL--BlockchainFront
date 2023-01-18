@@ -26,16 +26,16 @@ export function isOwner(address: string, connectedUser: User): boolean {
     return address.toLowerCase() === connectedUser?.address
 }
 
-// export enum BuildingNameType {
-//     MEDITERRANEAN = "Mediterranean_Avenue",
-//     BALTIC = "Baltic_Avenue",
-//     ORIENTAL = "Oriental_Avenue",
-//     VERMONT = "Vermont_Avenue",
-//     CONNECTICUT = "Connecticut_Avenue",
-//     STATES = "States_Avenue",
-//     VIRGINIA = "Virginia_Avenue",
-//     TENNESSEE = "Tennessee_Avenue",
-// }
+export enum BuildingNameType {
+    MEDITERRANEAN = "Mediterranean_Avenue",
+    BALTIC = "Baltic_Avenue",
+    ORIENTAL = "Oriental_Avenue",
+    VERMONT = "Vermont_Avenue",
+    CONNECTICUT = "Connecticut_Avenue",
+    STATES = "States_Avenue",
+    VIRGINIA = "Virginia_Avenue",
+    TENNESSEE = "Tennessee_Avenue",
+}
 
 export const buildingNameTypes = [
     {label: "MEDITERRANEAN", value: "Mediterranean_Avenue"},
@@ -85,5 +85,5 @@ export function getErrorMessage(source: any) {
 }
 
 export function getTransactionHashFromEvent(event: any) {
-    return event[4].transactionHash
+    return event.filter(it => it.transactionHash != null).map(it => it.transactionHash)[0]
 }

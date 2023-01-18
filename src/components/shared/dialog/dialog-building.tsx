@@ -3,7 +3,6 @@ import React, {useRef} from "react";
 import {Dialog} from "primereact/dialog";
 import {Messages} from "primereact/messages";
 import {Dropdown} from "primereact/dropdown";
-import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {createBuilding} from "../../../store/building/building.slice";
 import {setToastEntity} from "../../../store/toast/toast.slice";

@@ -1,24 +1,19 @@
 import "./toolbar-building.css";
-import React, {ReactElement, useEffect, useState} from "react";
+import React, {ReactElement, useState} from "react";
 import {Toolbar} from "primereact/toolbar";
 import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
 import {InputNumber} from "primereact/inputnumber";
 import {Dropdown} from "primereact/dropdown";
-import {Building} from "../../store/building/building.model";
 import {Message} from "primereact/message";
-import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {updateBuilding} from "../../store/building/building.slice";
-import {isOwnerBuildingTaken} from "../shared/file-utils";
+import {usePrimeReactState} from "../../app/hooks";
 import {getContractPolyFactory} from "../../contract";
+import {Building} from "../../store/building/building.model";
 
 const ToolbarBuilding = () => {
-    const dispatch = useAppDispatch();
-    const buildings = useAppSelector(state => state.building.entities);
-    const connectedUser = useAppSelector(state => state.user.connectedUser);
     const [dialogCreateAuction, setDialogCreateAuction] = useState(false);
-    const [building, setBuilding] = useState<Building | undefined>(undefined);
-    const [price, setPrice] = useState<number | null>(1);
+    const [building, setBuilding] = usePrimeReactState(null);
+    const [price, setPrice] = usePrimeReactState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
@@ -47,18 +42,19 @@ const ToolbarBuilding = () => {
                     footer={footer}
                     onHide={() => setDialogCreateAuction(false)}
                 >
-                    {error ? <Message severity="error" text={error}/> : ""}
+                    {error ? <Message severity="error" text={error} /> : ""}
                     <Dropdown
-                        options={buildings.filter(value => isOwnerBuildingTaken(value, connectedUser))}
+                        options={[{}]}
                         optionLabel="id"
+                        valueTemplate={dropDownItemTemplate}
                         itemTemplate={dropDownItemTemplate}
                         placeholder="Select a Building"
                         value={building}
-                        onChange={(e) => setBuilding(e.value)}
+                        onChange={setBuilding}
                     />
                     <InputNumber
                         value={price}
-                        onValueChange={(e) => setPrice(e.value)}
+                        onValueChange={setPrice}
                         showButtons
                         mode="currency"
                         currency="ETH"
@@ -68,24 +64,25 @@ const ToolbarBuilding = () => {
         </div>
     );
 
-    function dropDownItemTemplate(option): ReactElement {
+    function dropDownItemTemplate(option: Building): ReactElement {
+        if (option == null || option.name == null || option.boardId == null) return <div>i</div>
         return (
-            <div>{`${option.name} [${option.id}]`}</div>
+            <div>{`${option?.name} [board: ${option?.boardId}]`}</div>
         )
     }
 
     function footer() {
         return (
             <div>
-                <Button label="Cancel" icon="pi pi-times" onClick={() => setDialogCreateAuction(false)}/>
-                <Button label="Submit" loading={isLoading} loadingIcon="pi pi-spin pi-sun" onClick={onSubmit}/>
+                <Button label="Cancel" icon="pi pi-times" onClick={() => setDialogCreateAuction(false)} />
+                <Button label="Submit" loading={isLoading} loadingIcon="pi pi-spin pi-sun" onClick={onSubmit} />
             </div>
         )
     }
 
     function reset() {
-        setBuilding(undefined)
-        setPrice(1)
+        setBuilding({value: undefined})
+        setPrice({value: 1})
     }
 
     function onSubmit() {
@@ -95,13 +92,12 @@ const ToolbarBuilding = () => {
         }
 
         setIsLoading(true)
+        putToAuction()
 
         setTimeout(() => {
-            reset()
             setDialogCreateAuction(false)
             setIsLoading(false)
-            dispatch(updateBuilding({...building, isBuyable: true}))
-            putToAuction()
+            reset()
         }, 2000)
 
 
@@ -115,7 +111,9 @@ const ToolbarBuilding = () => {
                 return;
             }
 
-            contract.putBuildingToAuction(building.id, price);
+            console.log(building.id)
+            console.log(price)
+            // contract.putBuildingToAuction(building.id, price);
         })
     }
 }

@@ -1,4 +1,4 @@
-import {useAppDispatch, useAppState, useAppStateBoolean} from "../../../app/hooks";
+import {useAppDispatch, useAppState, useAppStateBoolean, usePrimeReactState} from "../../../app/hooks";
 import React, {useRef} from "react";
 import {Dialog} from "primereact/dialog";
 import {Messages} from "primereact/messages";
@@ -19,8 +19,8 @@ const DialogBoard = (props: DialogBoardProps) => {
     const messages = useRef(null);
     const [isLoading, toggleIsLoading] = useAppStateBoolean(false);
     const [name, setName] = useAppState('');
-    const [buyIn, setBuyIn] = useAppState(null);
-    const [blind, setBlind] = useAppState(null);
+    const [buyIn, setBuyIn] = usePrimeReactState(null);
+    const [blind, setBlind] = usePrimeReactState(null);
 
     return (
         <Dialog

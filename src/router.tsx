@@ -7,6 +7,7 @@ import Profile from "./components/profile/profile";
 import RouterGuard from "./router.guard";
 import Admin from "./components/admin/admin";
 import Home from "./components/home/home";
+import DetailsBoard from "./components/details-board/details-board";
 
 
 const Router = () => {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
     {
         path: "/admin",
         element: <RouterGuard children={<Admin />} />,
+    },
+    {
+        path: "/board/:id",
+        element: <RouterGuard children={<DetailsBoard />} />,
     },
 ]);
 

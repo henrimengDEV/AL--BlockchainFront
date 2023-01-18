@@ -5,7 +5,6 @@ import React, {useEffect} from "react";
 import {Column} from "primereact/column";
 import {DataTable} from "primereact/datatable";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {state} from "@web3-onboard/core/dist/store";
 import {getAllBoards} from "../../store/board/board.slice";
 
 const DatatableBuilding = (props: { buildinds: Building[] }) => {
@@ -58,7 +57,7 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
     )
 
     function name(building: Building) {
-        const boardName = boards.find(board => board.id === building.borderId).name || ''
+        const boardName = boards.find(board => board.id === building.boardId).name || ''
 
         return (
             <div className="Market__name">

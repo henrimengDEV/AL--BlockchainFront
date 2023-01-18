@@ -21,10 +21,6 @@ const buildingSlice = createSlice({
         getBuildingById(state, action: PayloadAction<number>) {
             state.entity = state.entities.find(building => building.id === action.payload);
         },
-        updateBuilding(state, action: PayloadAction<Building>) {
-            const index = state.entities.findIndex(state => state.name === action.payload.name)
-            state.entities[index] = action.payload
-        },
         createBuilding(_, action: PayloadAction<{ building: CreateBuildingModel, onError: (error: string) => void }>) {
             getContractPolyFactory().then(({contract: contract}) => {
                 if (!contract) {
@@ -34,6 +30,23 @@ const buildingSlice = createSlice({
 
                 const newBuilding: CreateBuildingModel = action.payload.building
                 contract.createUniqueNFT(newBuilding.name, newBuilding.boardId)
+                    .then(
+                        res => {
+                        },
+                        err => {
+                            action.payload.onError(getErrorMessage(err))
+                        }
+                    )
+            })
+        },
+        deleteBuildingToAuction(_, action: PayloadAction<{ buildingId: number, onError: (error: string) => void }>) {
+            getContractPolyFactory().then(({contract: contract}) => {
+                if (!contract) {
+                    console.error("contract is null")
+                    return;
+                }
+
+                contract.deleteAuction(action.payload.buildingId)
                     .then(
                         res => {
                         },
@@ -70,7 +83,7 @@ export const getAllBuildings = createAsyncThunk(
                         owner: {username: 'foo', address: item.owner} || null,
                         isBuyable: item.isBuyable || false,
                         lastUpdateDate: item.lastUpdateDate || 'lastUpdateDate',
-                        borderId: convertBigNumberToNumber(item.boardId)
+                        boardId: convertBigNumberToNumber(item.boardId)
                     }
 
                     return building
@@ -82,5 +95,5 @@ export const getAllBuildings = createAsyncThunk(
     }
 )
 
-export const {getBuildingById, updateBuilding, createBuilding} = buildingSlice.actions
+export const {getBuildingById, createBuilding, deleteBuildingToAuction} = buildingSlice.actions
 export default buildingSlice.reducer

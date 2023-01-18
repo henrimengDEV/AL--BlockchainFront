@@ -1,0 +1,95 @@
+.Coinpoly {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    background-color: white;
+    padding-top: 2rem;
+    position: relative;
+}
+
+.Coinpoly__legend {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    box-shadow: rgba(50, 50, 93, 0.25) 0 2px 5px -1px, rgba(0, 0, 0, 0.3) 0 1px 3px -1px;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+}
+
+.Coinpoly__container {
+    --size: 600px;
+
+    width: var(--size);
+    height: var(--size);
+
+    background-color: transparent;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.Coinpoly__logo {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    box-shadow: rgba(50, 50, 93, 0.25) 0 2px 5px 2px, rgba(0, 0, 0, 0.3) 0 1px 3px -1px;
+}
+
+.Coinpoly__case {
+    --size-case: 90px;
+    --rotate: calc(360deg / var(--nb) * var(--numero));
+
+    height: var(--size-case);
+    width: var(--size-case);
+
+    background-color: transparent;
+    border-color: transparent;
+    position: absolute;
+    left: 0;
+
+    transition-property: transform, background-color;
+    transition-delay: 0, calc(0.1s * var(--numero));
+    transition-duration: 0.5s, 0.3s;
+
+    transform-origin: calc(var(--size) / 2);
+    transform: rotate(var(--rotate));
+}
+
+.Coinpoly__wrapper {
+    position: relative;
+
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+
+    border-radius: 8px;
+    cursor: pointer;
+
+    transform: rotate(calc(var(--rotate) * -1));
+    transition: all 250ms ease;
+}
+
+:not(.Coinpoly__case:disabled) > .Coinpoly__wrapper:hover {
+    box-shadow: lightgray 0 0 0 3px;
+}
+
+.Coinpoly__wrapper > p {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+
+    transform: translate(-50%, 150%);
+}
+
+.Coinpoly__wrapper > img {
+    height: 100%;
+    width: 100%;
+}

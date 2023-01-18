@@ -1,6 +1,6 @@
 import "./app.css";
 import React, {useEffect, useRef} from "react";
-import Menu from "./components/menu/menu";
+import Menu from "./components/shared/menu/menu";
 import Router from "./router";
 import {ConfirmDialog} from "primereact/confirmdialog";
 import {Toast, ToastMessage} from "primereact/toast";
@@ -18,27 +18,7 @@ const App = () => {
     const toastEntity = useAppSelector(state => state.toast.value)
 
     useEffect(() => {
-        getContractPolyFactory().then(({contract}) => {
-            contract.on("NewBuilding", (...args) => {
-                dispatch(getAllBuildings())
-                dispatch(setToastEntity({
-                    severity: 'info',
-                    summary: 'Transaction successful',
-                    detail: 'New building created !',
-                    transactionHash: getTransactionHashFromEvent(args)
-                }))
-            })
-            contract.on("NewBoard", (...args) => {
-
-                dispatch(getAllBoards())
-                dispatch(setToastEntity({
-                    severity: 'info',
-                    summary: 'Transaction successful',
-                    detail: 'New board created !',
-                    transactionHash: getTransactionHashFromEvent(args)
-                }))
-            })
-        })
+       handlePushNotifications()
     }, []);
 
     useEffect(() => {
@@ -50,7 +30,7 @@ const App = () => {
             <Menu />
             <Router />
             <ConfirmDialog style={{backgroundColor: 'red'}} />
-            <Toast ref={toastRef} position="bottom-left" />
+            <Toast style={{maxHeight: '500px'}} ref={toastRef} position="bottom-left" />
         </div>
     )
 
@@ -60,6 +40,65 @@ const App = () => {
         setTimeout(() => {
             dispatch(resetToastValue())
         }, 5000)
+    }
+
+    function handlePushNotifications() {
+        getContractPolyFactory().then(({contract}) => {
+            contract.on("NewBuilding", (...args) => {
+                dispatch(getAllBuildings())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'New building created !',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+            contract.on("CancelSold", (...args) => {
+                dispatch(getAllBuildings())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'CancelSold !',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+            contract.on("BuildingPuttedToAuction", (...args) => {
+                dispatch(getAllBuildings())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'BuildingPuttedToAuction !',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+            contract.on("BuildingSold", (...args) => {
+                dispatch(getAllBuildings())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'BuildingSold !',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+            contract.on("OwnershipTransferred", (...args) => {
+                dispatch(getAllBuildings())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'OwnershipTransferred !',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+            contract.on("NewBoard", (...args) => {
+                dispatch(getAllBoards())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'New board created !',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+        })
     }
 }
 

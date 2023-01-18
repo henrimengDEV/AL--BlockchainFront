@@ -1,9 +1,7 @@
 import React from "react";
 import {Card} from "primereact/card";
 import {Button} from "primereact/button";
-import {useAppDispatch, useAppStateBoolean} from "../../app/hooks";
-import {createBoard} from "../../store/board/board.slice";
-import {setToastEntity} from "../../store/toast/toast.slice";
+import {useAppStateBoolean} from "../../app/hooks";
 import DialogBuilding from "../shared/dialog/dialog-building";
 import DialogBoard from "../shared/dialog/dialog-board";
 
@@ -13,7 +11,6 @@ const AdminStyle = {
 }
 
 const Admin = () => {
-    const dispatch = useAppDispatch()
     const [dialogBoardVisible, toggleDialogBoardVisible] = useAppStateBoolean(false);
     const [dialogBuildingVisible, toggleDialogBuildingVisible] = useAppStateBoolean(false);
 

@@ -36,6 +36,7 @@
     font-weight: 700;
     font-size: 12px;
     letter-spacing: .3px;
+    width: fit-content;
 }
 
 .customer-badge.status-unqualified {

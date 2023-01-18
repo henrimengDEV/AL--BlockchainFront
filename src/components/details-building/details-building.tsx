@@ -4,9 +4,6 @@ import React, {useEffect, useState} from "react";
 import {Button} from "primereact/button";
 import inProgress from '../../assets/undraw_in_progress.png'
 import {Accordion, AccordionTab} from "primereact/accordion";
-import {DataTable} from "primereact/datatable";
-import {Column} from "primereact/column";
-import {Offer} from "../../store/offer/offer.model";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {getContractPolyFactory} from "../../contract";
 import {getBuildingById} from "../../store/building/building.slice";
@@ -54,35 +51,35 @@ const DetailsBuilding = () => {
                             {BuildingCardFooter()}
                         </div>
                     </AccordionTab>
-                    <AccordionTab header={OffersCardTitle()} className="DetailsBuilding__offers">
-                        <DataTable value={offers} responsiveLayout="scroll" cellSelection size="small">
-                            <Column
-                                field="price"
-                                header="Price"
-                            />
-                            <Column
-                                header="USD Price"
-                                body={data => <>${data.price * 1.48}</>}
-                            />
-                            <Column
-                                header="Floor difference"
-                                body={data => <>{data.price / building.price * 100}%</>}
-                            />
-                            <Column
-                                field="expiration"
-                                header="Expiration"
-                            />
-                            <Column
-                                field="from"
-                                header="From"
-                                body={(data: Offer) =>
-                                    <Link to={`/profile/${data.from.address}`}>
-                                        {data.from.username}
-                                    </Link>
-                                }
-                            />
-                        </DataTable>
-                    </AccordionTab>
+                    {/*<AccordionTab header={OffersCardTitle()} className="DetailsBuilding__offers">*/}
+                    {/*    <DataTable value={offers} responsiveLayout="scroll" cellSelection size="small">*/}
+                    {/*        <Column*/}
+                    {/*            field="price"*/}
+                    {/*            header="Price"*/}
+                    {/*        />*/}
+                    {/*        <Column*/}
+                    {/*            header="USD Price"*/}
+                    {/*            body={data => <>${data.price * 1.48}</>}*/}
+                    {/*        />*/}
+                    {/*        <Column*/}
+                    {/*            header="Floor difference"*/}
+                    {/*            body={data => <>{data.price / building.price * 100}%</>}*/}
+                    {/*        />*/}
+                    {/*        <Column*/}
+                    {/*            field="expiration"*/}
+                    {/*            header="Expiration"*/}
+                    {/*        />*/}
+                    {/*        <Column*/}
+                    {/*            field="from"*/}
+                    {/*            header="From"*/}
+                    {/*            body={(data: Offer) =>*/}
+                    {/*                <Link to={`/profile/${data.from.address}`}>*/}
+                    {/*                    {data.from.username}*/}
+                    {/*                </Link>*/}
+                    {/*            }*/}
+                    {/*        />*/}
+                    {/*    </DataTable>*/}
+                    {/*</AccordionTab>*/}
                 </Accordion>
             </div>
         </div>
@@ -90,8 +87,8 @@ const DetailsBuilding = () => {
 
     function BuildingCardTitle() {
         return <div className="DetailsBuilding__title">
-            <i className="pi pi-clock" />
-            Sale ends 13 janvier 2023 at 7:28 PM GMT+1
+            <i className="pi pi-bitcoin" />
+            Auction
         </div>
     }
 
@@ -99,7 +96,7 @@ const DetailsBuilding = () => {
         return <Button
             icon="pi pi-tag"
             className="DetailsBuilding__make-offer"
-            label={'Make offer'}
+            label={'Buy it'}
             onClick={onSubmit}
             loading={isLoading}
             loadingIcon="pi pi-spin pi-sun"

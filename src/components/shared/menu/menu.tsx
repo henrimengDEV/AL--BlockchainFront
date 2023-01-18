@@ -1,8 +1,8 @@
 import {Menubar} from "primereact/menubar";
 import React, {useState} from "react";
 import {Dialog} from "primereact/dialog";
-import OnBoard from "../shared/on-board";
-import {useAppSelector} from "../../app/hooks";
+import OnBoard from "../on-board";
+import {useAppSelector} from "../../../app/hooks";
 
 const Menu = () => {
     const [visible, setVisible] = useState<boolean>(false);
@@ -11,6 +11,7 @@ const Menu = () => {
     return (
         <>
             <Menubar
+                style={{borderRadius: '0'}}
                 start={
                     <div className="flex">
                         <img

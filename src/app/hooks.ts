@@ -14,5 +14,11 @@ export const useAppState = (value: any): [any, (e) => void] => {
     return [state, handleSetState]
 }
 
+export const usePrimeReactState = (value: any): [any, (e: { value: any }) => void] => {
+    const [state, setState] = useState(value);
+    const handleSetState = (e: any) => setState(e.value)
+    return [state, handleSetState]
+}
+
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RooState> = useSelector

@@ -1,10 +1,12 @@
 import "./market-board.css"
-import React, {useEffect} from "react"
+import React, {ReactElement, useEffect} from "react"
 import {DataTable} from "primereact/datatable"
 import {Column} from "primereact/column"
 import {Board} from "../../store/board/board.model"
 import {useAppDispatch, useAppSelector} from "../../app/hooks"
 import {getAllBoards} from "../../store/board/board.slice";
+import {Link} from "react-router-dom";
+import {Button} from "primereact/button";
 
 const MarketBoard = () => {
     const boards = useAppSelector(state => state.board.entities)
@@ -41,6 +43,7 @@ const MarketBoard = () => {
                     body={buyIn}
                     sortable
                 />
+                <Column body={action} />
             </DataTable>
         </div>
     );
@@ -65,6 +68,18 @@ const MarketBoard = () => {
             <>
                 {board.blind} ETH
             </>
+        )
+    }
+
+    function action(board: Board): ReactElement {
+        return (
+            <Link to={`/board/${board.id}`} style={{textDecoration: 'none'}}>
+                <Button
+                    icon="pi pi-angle-right"
+                    className="p-button-rounded p-button-outlined"
+                    aria-label="Details"
+                />
+            </Link>
         )
     }
 }

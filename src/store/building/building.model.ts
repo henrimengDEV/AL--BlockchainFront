@@ -7,7 +7,7 @@ export interface Building {
     owner: User
     isBuyable: boolean
     lastUpdateDate: string
-    borderId: number
+    boardId: number
 }
 
 export interface CreateBuildingModel {
