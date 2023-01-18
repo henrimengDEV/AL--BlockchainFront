@@ -10,7 +10,7 @@ export const getContractPolyFactory = async () => {
 
 //
 
-const polyFactoryAddress = "0x0b306bf915c4d645ff596e518faf3f9669b97016";
+const polyFactoryAddress = "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512";
 const polyFactoryAbi = [
     "constructor()",
     "event ApprovalForAll(address indexed account, address indexed operator, bool approved)",

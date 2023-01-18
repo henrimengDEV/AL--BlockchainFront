@@ -64,13 +64,12 @@ const DetailsBoard = () => {
                     You are
                     <Avatar
                         style={{height: '2rem', width: '2rem'}}
-                        image={coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser)).image}
+                        image={coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser))?.image}
                     />
                 </div>
                 <div className="customer-badge status-qualified">MINE</div>
                 <div className="customer-badge status-new">BUYABLE</div>
                 <div className="customer-badge status-unqualified">TAKEN</div>
-                <button onClick={() => setConnectedPlayerPosition(3)}>click me</button>
             </div>
 
             <h3>{board.name}</h3>
@@ -136,11 +135,11 @@ const DetailsBoard = () => {
                     isOwner(building?.owner?.address, connectedUser)
                         ? <div>
                             <strong>Owner :</strong>
-                            <p className="customer-badge status-qualified">{building.owner.address}</p>
+                            <p className="customer-badge status-qualified">Me</p>
                         </div>
                         : <div>
                             <strong>Owner :</strong>
-                            <p className="customer-badge status-qualified">Me</p>
+                            <p className="customer-badge status-qualified">{building?.owner.address}</p>
                         </div>
                 }
                 <div>

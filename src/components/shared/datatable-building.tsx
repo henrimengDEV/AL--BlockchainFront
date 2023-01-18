@@ -57,12 +57,12 @@ const DatatableBuilding = (props: { buildinds: Building[] }) => {
     )
 
     function name(building: Building) {
-        const boardName = boards.find(board => board.id === building.boardId).name || ''
+        const boardName = boards.find(board => board.id === building.boardId)?.name || ''
 
         return (
             <div className="Market__name">
                 <strong>{boardName}</strong>
-                [<small><i>{building.name}</i></small>]
+                [<small><i>{building?.name}</i></small>]
             </div>
         )
     }
