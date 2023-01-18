@@ -6,12 +6,15 @@ import {Dialog} from "primereact/dialog";
 import {InputNumber} from "primereact/inputnumber";
 import {Dropdown} from "primereact/dropdown";
 import {Message} from "primereact/message";
-import {usePrimeReactState} from "../../app/hooks";
+import {useAppSelector, usePrimeReactState} from "../../app/hooks";
 import {getContractPolyFactory} from "../../contract";
 import {Building} from "../../store/building/building.model";
+import {isOwner, isOwnerBuildingBuyable, isOwnerBuildingTaken} from "../shared/file-utils";
 
 const ToolbarBuilding = () => {
     const [dialogCreateAuction, setDialogCreateAuction] = useState(false);
+    const connectedUser = useAppSelector(state => state.user.connectedUser)
+    const connectedUserBuildings = useAppSelector(state => state.building.entities.filter((it: Building) => isOwnerBuildingTaken(it, connectedUser)));
     const [building, setBuilding] = usePrimeReactState(null);
     const [price, setPrice] = usePrimeReactState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +47,7 @@ const ToolbarBuilding = () => {
                 >
                     {error ? <Message severity="error" text={error} /> : ""}
                     <Dropdown
-                        options={[{}]}
+                        options={[{}, ...connectedUserBuildings]}
                         optionLabel="id"
                         valueTemplate={dropDownItemTemplate}
                         itemTemplate={dropDownItemTemplate}
@@ -65,7 +68,7 @@ const ToolbarBuilding = () => {
     );
 
     function dropDownItemTemplate(option: Building): ReactElement {
-        if (option == null || option.name == null || option.boardId == null) return <div>i</div>
+        if (option == null || option.name == null || option.boardId == null) return <div></div>
         return (
             <div>{`${option?.name} [board: ${option?.boardId}]`}</div>
         )
@@ -111,9 +114,7 @@ const ToolbarBuilding = () => {
                 return;
             }
 
-            console.log(building.id)
-            console.log(price)
-            // contract.putBuildingToAuction(building.id, price);
+            contract.putBuildingToAuction(building.id, price);
         })
     }
 }
