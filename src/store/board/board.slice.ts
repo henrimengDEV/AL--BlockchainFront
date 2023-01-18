@@ -57,7 +57,6 @@ export const getAllBoards = createAsyncThunk(
                         name: item.name,
                         blind: item.blind | 1,
                         buyIn: item.buyIn | 1,
-                        playerStates: []
                     }
                     return newBoard
                 })

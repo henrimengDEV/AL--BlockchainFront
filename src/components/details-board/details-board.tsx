@@ -21,6 +21,7 @@ const DetailsBoard = () => {
     const board = useAppSelector(state => state.board.entities.find(it => it.id === +id))
     const buildings = useAppSelector(state => state.building.entities.filter(it => it.boardId === +id))
     const buildingsTaken: string[] = buildings.filter(it => !it.isBuyable).map(it => it.name)
+    const buildingsBuyable: string[] = buildings.filter(it => it.isBuyable).map(it => it.name)
     const myBuildings: string[] = buildings.filter(it => isOwner(it.owner.address, connectedUser)).map(it => it.name)
 
     const [playerStates, setPlayerStates] = useState([
@@ -133,8 +134,14 @@ const DetailsBoard = () => {
 
     function getBuildingStatus(buildingTypeName: string): string {
         const source = BuildingNameType[buildingTypeName]
-        if (myBuildings.includes(source)) return 'status-qualified'
+
+        if (myBuildings.includes(source)) {
+            if (buildingsBuyable.includes(source))
+                return 'status-new'
+            return 'status-qualified'
+        }
         if (buildingsTaken.includes(source)) return 'status-unqualified'
+
         return 'status-new'
     }
 

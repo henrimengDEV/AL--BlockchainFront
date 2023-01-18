@@ -9,6 +9,7 @@ import {getContractPolyFactory} from "../../contract";
 import {getBuildingById} from "../../store/building/building.slice";
 import {isOwner} from "../shared/file-utils";
 import {ethers} from "ethers";
+import {setToastEntity} from "../../store/toast/toast.slice";
 
 const DetailsBuilding = () => {
     let {id} = useParams();
@@ -18,7 +19,6 @@ const DetailsBuilding = () => {
     const connectedUser = useAppSelector(state => state.user.connectedUser)
     const [activeIndex, setActiveIndex] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState("");
 
     useEffect(() => {
         dispatch(getBuildingById(+id))
@@ -113,7 +113,11 @@ const DetailsBuilding = () => {
 
     function onSubmit() {
         if (building == null) {
-            setError("A building is required to create an auction !")
+            dispatch(setToastEntity({
+                severity: 'error',
+                summary: 'Error',
+                detail: "A building is required to create an auction !"
+            }))
             return
         }
 
@@ -121,12 +125,20 @@ const DetailsBuilding = () => {
 
         getContractPolyFactory().then(({contract}) => {
             if (!contract) {
-                window.alert("contract is null")
+                dispatch(setToastEntity({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: "Contract is null"
+                }))
                 return;
             }
 
             if(isOwner(building.owner.address, connectedUser)) {
-                window.alert("you are not allow to buy this building")
+                dispatch(setToastEntity({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: "You are not allowed to buy this building"
+                }))
                 return;
             }
 

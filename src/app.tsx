@@ -49,7 +49,7 @@ const App = () => {
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'New building created !',
+                    detail: 'New [BUILDING] has been [CREATED]',
                     transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
@@ -58,7 +58,7 @@ const App = () => {
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'CancelSold !',
+                    detail: 'An [AUCTION] has been [CANCELED]',
                     transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
@@ -67,7 +67,7 @@ const App = () => {
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'BuildingPuttedToAuction !',
+                    detail: 'A Building [AUCTION] has been [CREATED]',
                     transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
@@ -76,16 +76,7 @@ const App = () => {
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'BuildingSold !',
-                    transactionHash: getTransactionHashFromEvent(args)
-                }))
-            })
-            contract.on("OwnershipTransferred", (...args) => {
-                dispatch(getAllBuildings())
-                dispatch(setToastEntity({
-                    severity: 'info',
-                    summary: 'Transaction successful',
-                    detail: 'OwnershipTransferred !',
+                    detail: 'A Building has been [SOLD]',
                     transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
@@ -94,7 +85,7 @@ const App = () => {
                 dispatch(setToastEntity({
                     severity: 'info',
                     summary: 'Transaction successful',
-                    detail: 'New board created !',
+                    detail: 'New [BOARD] has been [CREATED]',
                     transactionHash: getTransactionHashFromEvent(args)
                 }))
             })

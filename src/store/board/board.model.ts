@@ -3,7 +3,6 @@ export interface Board {
     name: string
     blind: number
     buyIn: number
-    playerStates: PlayerState[]
 }
 
 interface PlayerState {

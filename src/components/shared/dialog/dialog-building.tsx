@@ -7,6 +7,7 @@ import {Button} from "primereact/button";
 import {createBuilding} from "../../../store/building/building.slice";
 import {setToastEntity} from "../../../store/toast/toast.slice";
 import {buildingNameTypes} from "../file-utils";
+import {Board} from "../../../store/board/board.model";
 
 interface DialogBuildingProps {
     visible: boolean
@@ -15,12 +16,16 @@ interface DialogBuildingProps {
 
 const DialogBuilding = (props: DialogBuildingProps) => {
     const {visible, onHide} = props
-    const dispatch = useAppDispatch()
-    const boards = useAppSelector(state => state.board.entities)
+
     const messages = useRef(null);
+    const dispatch = useAppDispatch()
+
     const [isLoading, toggleIsLoading] = useAppStateBoolean(false);
     const [name, setNameByValue, setName] = useAppState('');
     const [board, setBoardByValue, setBoard] = useAppState(null);
+
+    const boards = useAppSelector(state => state.board.entities)
+    const buildingsAlreadyTaken = useAppSelector(state => state.building.entities.filter(it => it.boardId === board?.id)).map(it => it.name)
 
     return (
         <Dialog
@@ -45,7 +50,7 @@ const DialogBuilding = (props: DialogBuildingProps) => {
                     />
                     <Dropdown
                         value={name}
-                        options={buildingNameTypes}
+                        options={buildingNameTypes.filter(it => !buildingsAlreadyTaken.includes(it.value))}
                         onChange={setNameByValue}
                         placeholder="Select a type*"
                     />

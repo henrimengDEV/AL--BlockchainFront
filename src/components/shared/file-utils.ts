@@ -92,3 +92,7 @@ export function getErrorMessage(source: any) {
 export function getTransactionHashFromEvent(event: any) {
     return event.filter(it => it.transactionHash != null).map(it => it.transactionHash)[0]
 }
+
+export function getAddress(address: string) {
+    return `${address.substring(0, 5)}...${address.substring(address.length - 5, address.length)}`
+}

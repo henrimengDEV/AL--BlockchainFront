@@ -5,6 +5,7 @@ import Onboard from "@web3-onboard/core";
 import {Button} from "primereact/button";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {changeConnectedUser, resetConnectedUser} from "../../store/user/user.slice";
+import {getAddress} from "./file-utils";
 
 
 const coinbaseWalletSdk = coinbaseWalletModule();
@@ -64,7 +65,7 @@ const OnBoard = () => {
                 connectedUser == null
                     ? <Button label="Connect Wallet" icon="pi pi-bitcoin" onClick={connectWallet} />
                     : <Button
-                        label="Disconnect"
+                        label={getAddress(connectedUser.address)}
                         icon="pi pi-power-off"
                         className="p-button-warning"
                         onClick={disconnect}

@@ -113,7 +113,6 @@ const DialogBoard = (props: DialogBoardProps) => {
                 name: name,
                 buyIn: buyIn,
                 blind: blind,
-                playerStates: []
             },
             onError: (error) => {
                 dispatch(setToastEntity({
