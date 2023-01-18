@@ -22,6 +22,17 @@ const persistedReducer = persistReducer(persistConfig, combineReducers({
 
 export const store = configureStore({
     reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                // Ignore these action types
+                ignoredActions: ['persist/PERSIST', 'building/createBuilding', 'board/createBoard'],
+                // Ignore these field paths in all actions
+                ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
+                // Ignore these paths in the state
+                ignoredPaths: ['items.dates'],
+            },
+        }),
 });
 
 export const persistor = persistStore(store)

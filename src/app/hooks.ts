@@ -8,10 +8,10 @@ export const useAppStateBoolean = (value?: boolean): [boolean, () => void] => {
     return [state, toggleState]
 }
 
-export const useAppState = (value: any): [any, (e) => void] => {
+export const useAppState = (value: any): [any, ((e: { target: { value: any } }) => void), ((value: any) => void)] => {
     const [state, setState] = useState(value);
     const handleSetState = (e: any) => setState(e.target.value)
-    return [state, handleSetState]
+    return [state, handleSetState, setState]
 }
 
 export const usePrimeReactState = (value: any): [any, (e: { value: any }) => void] => {

@@ -18,7 +18,7 @@ const DialogBoard = (props: DialogBoardProps) => {
     const dispatch = useAppDispatch()
     const messages = useRef(null);
     const [isLoading, toggleIsLoading] = useAppStateBoolean(false);
-    const [name, setName] = useAppState('');
+    const [name, setNameByValue, setName] = useAppState('');
     const [buyIn, setBuyIn] = usePrimeReactState(null);
     const [blind, setBlind] = usePrimeReactState(null);
 
@@ -39,7 +39,7 @@ const DialogBoard = (props: DialogBoardProps) => {
                             id="name"
                             style={{width: '100%'}}
                             value={name}
-                            onChange={setName}
+                            onChange={setNameByValue}
                         />
                     </span>
                     <span className="field ">
@@ -112,7 +112,8 @@ const DialogBoard = (props: DialogBoardProps) => {
             newBoard: {
                 name: name,
                 buyIn: buyIn,
-                blind: blind
+                blind: blind,
+                playerStates: []
             },
             onError: (error) => {
                 dispatch(setToastEntity({
@@ -128,8 +129,8 @@ const DialogBoard = (props: DialogBoardProps) => {
         toggleIsLoading()
         onHide()
         setName('')
-        setBuyIn(null)
-        setBlind(null)
+        setBuyIn({value: null})
+        setBlind({value: null})
     }
 }
 

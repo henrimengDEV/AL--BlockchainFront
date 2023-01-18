@@ -1,5 +1,5 @@
 import "./details-board.css"
-import React, {useEffect, useState} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import {BuildingNameType, isOwner} from "../shared/file-utils";
 import inProgress from '../../assets/undraw_building.png'
 import {useAppSelector, useAppStateBoolean} from "../../app/hooks";
@@ -61,84 +61,74 @@ const DetailsBoard = () => {
                     src="https://ih1.redbubble.net/image.3375471324.6724/st,small,507x507-pad,600x600,f8f8f8.jpg"
                     alt="logo"
                 />
-
-                {
-                    Object.keys(BuildingNameType).map((item, index) =>
-                        <button
-                            key={`building_${index}`}
-                            onClick={() => {
-                                setBuilding(() => buildings.find(it => it.name === BuildingNameType[item]))
-                                toggleDialogVisible()
-                            }}
-                            className="Coinpoly__case"
-                            style={{'--numero': index + 1,} as React.CSSProperties}
-                            disabled={buildings.find(it => it.name === BuildingNameType[item]) == null}
-                        >
-                            <div className="Coinpoly__wrapper">
-                                <img src={inProgress} alt="building" />
-                                <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
-                                    <p className={`customer-badge ${getBuildingStatus(item)}`}>{item}</p>
-                                    <div className="Coinpoly__players">
-                                        {
-                                            playerStates.map(player => {
-                                                if (player.position !== index) return <></>
-                                                return <Avatar
-                                                    style={
-                                                        isOwner(player.userAddress, connectedUser)
-                                                            ? {
-                                                                borderRadius: '50%',
-                                                                padding: '2px',
-                                                                border: '2px lightgrey solid',
-                                                                height: '2rem',
-                                                                width: '2rem'
-                                                            }
-                                                            : {height: '2rem', width: '2rem'}
-                                                    }
-                                                    image={player.image}
-                                                />
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        </button>
-                    )
-                }
+                {generateBuildingCards()}
             </div>
 
+            {dialogBuilding()}
             {isDiceVisible ? <Dice onPlay={setConnectedPlayerPosition} onHide={toggleDiceVisible} /> : ''}
-
-            <Dialog
-                visible={isDialogVisible}
-                onHide={toggleDialogVisible}
-                style={{width: '50vw'}}
-                header={headerDialog}
-            >
-                <ul style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-                    {
-                        isOwner(building?.owner?.address, connectedUser)
-                            ? <div>
-                                <strong>Owner :</strong>
-                                <p className="customer-badge status-qualified">{building.owner.address}</p>
-                            </div>
-                            : <div>
-                                <strong>Owner :</strong>
-                                <p className="customer-badge status-qualified">Me</p>
-                            </div>
-                    }
-                    <div>
-                        <strong>Blind :</strong>
-                        <p>{board.blind} ETH</p>
-                    </div>
-                </ul>
-            </Dialog>
         </div>
     )
 
-    function headerDialog(): React.ReactElement {
-        return (
-            <h2 style={{fontSize: '20px'}}>{building?.name}</h2>
-        )
+    function generateBuildingCards() {
+        return <>
+            {
+                Object.keys(BuildingNameType).map((itemBuilding, indexBuilding) =>
+                    <button
+                        key={`building_${indexBuilding}`}
+                        onClick={() => {
+                            setBuilding(() => buildings.find(it => it.name === BuildingNameType[itemBuilding]))
+                            toggleDialogVisible()
+                        }}
+                        className="Coinpoly__case"
+                        style={{'--numero': indexBuilding + 1,} as React.CSSProperties}
+                        disabled={buildings.find(it => it.name === BuildingNameType[itemBuilding]) == null}
+                    >
+                        <div className="Coinpoly__wrapper">
+                            <img src={inProgress} alt="building" />
+                            <div style={{display: 'flex', flexDirection: 'column', gap: '5px'}}>
+                                <p className={`customer-badge ${getBuildingStatus(itemBuilding)}`}>{itemBuilding}</p>
+                                <div className="Coinpoly__players">
+                                    {getPlayersByBuilding(indexBuilding)}
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                )
+            }
+        </>
+    }
+
+    function dialogBuilding(): ReactElement {
+        const headerDialog = (): React.ReactElement => {
+            return (
+                <h2 style={{fontSize: '20px'}}>{building?.name}</h2>
+            )
+        }
+
+        return <Dialog
+            visible={isDialogVisible}
+            onHide={toggleDialogVisible}
+            style={{width: '50vw'}}
+            header={headerDialog}
+        >
+            <ul style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                {
+                    isOwner(building?.owner?.address, connectedUser)
+                        ? <div>
+                            <strong>Owner :</strong>
+                            <p className="customer-badge status-qualified">{building.owner.address}</p>
+                        </div>
+                        : <div>
+                            <strong>Owner :</strong>
+                            <p className="customer-badge status-qualified">Me</p>
+                        </div>
+                }
+                <div>
+                    <strong>Blind :</strong>
+                    <p>{board.blind} ETH</p>
+                </div>
+            </ul>
+        </Dialog>
     }
 
     function getBuildingStatus(buildingTypeName: string): string {
@@ -157,6 +147,25 @@ const DetailsBoard = () => {
                 position: (currentState.position + value) % 8
             }
         ])
+    }
+
+    function getPlayersByBuilding(buildingIndex: number): ReactElement {
+
+        return <>
+            {
+                playerStates.map((player, playerIndex) => {
+                    if (player.position !== buildingIndex) return <div key={`avatar_${playerIndex}`}></div>
+                    return <div style={{position: 'relative'}}>
+                        <Avatar
+                            key={`avatar_${playerIndex}`}
+                            style={{height: '2rem', width: '2rem'}}
+                            className={isOwner(player.userAddress, connectedUser) ? 'Coinpoly__MyAvatar' : ''}
+                            image={player.image}
+                        />
+                    </div>
+                })
+            }
+        </>
     }
 
 }

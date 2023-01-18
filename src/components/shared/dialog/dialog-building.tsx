@@ -19,8 +19,8 @@ const DialogBuilding = (props: DialogBuildingProps) => {
     const boards = useAppSelector(state => state.board.entities)
     const messages = useRef(null);
     const [isLoading, toggleIsLoading] = useAppStateBoolean(false);
-    const [name, setName] = useAppState('');
-    const [board, setBoard] = useAppState(null);
+    const [name, setNameByValue, setName] = useAppState('');
+    const [board, setBoardByValue, setBoard] = useAppState(null);
 
     return (
         <Dialog
@@ -39,14 +39,14 @@ const DialogBuilding = (props: DialogBuildingProps) => {
                         itemTemplate={option => <div>{option.name}</div>}
                         placeholder="Select a board*"
                         value={board}
-                        onChange={setBoard}
+                        onChange={setBoardByValue}
                         required
                         showClear
                     />
                     <Dropdown
                         value={name}
                         options={buildingNameTypes}
-                        onChange={setName}
+                        onChange={setNameByValue}
                         placeholder="Select a type*"
                     />
                     <Button

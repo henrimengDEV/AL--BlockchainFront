@@ -78,8 +78,13 @@ export function areAddressesEquals(address1: string, address2: string) {
 export function getErrorMessage(source: any) {
     const error = JSON.stringify(source)
 
+    console.log(error)
+
     if (error.includes('Ownable: caller is not the owner'))
         return 'Ownable: caller is not the owner'
+
+    if (error.includes('User denied transaction signature'))
+        return 'User denied transaction signature'
 
     return error
 }

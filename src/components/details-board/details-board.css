@@ -77,7 +77,6 @@
     padding: 10px;
 
     border-radius: 8px;
-    cursor: pointer;
 
     transform: rotate(calc(var(--rotate) * -1));
     transition: all 250ms ease;
@@ -104,4 +103,22 @@
     display: flex;
     gap: 5px;
     flex-wrap: wrap;
+}
+
+.Coinpoly__MyAvatar {
+    box-shadow: rgb(50 50 93 / 25%) 0 2px 0px 1px, rgb(0 0 0 / 30%) 0 3px 8px -1px;
+    border-radius: 50%;
+    padding: 2px;
+    border: 2px lightgrey solid;
+}
+
+.Coinpoly__MyAvatar:before {
+    content: 'YOU ARE HERE';
+    width: 70px;
+    position: absolute;
+    right: -65px;
+    bottom: -20px;
+    color: darkgray;
+    font-weight: 400;
+    font-size: 12px;
 }
