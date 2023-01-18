@@ -6,16 +6,18 @@ import {useAppSelector, useAppStateBoolean} from "../../app/hooks";
 import {Navigate, useParams} from "react-router-dom";
 import {Dialog} from "primereact/dialog";
 import Dice from "../shared/dice/dice";
+import {Building} from "../../store/building/building.model";
 
 
 const DetailsBoard = () => {
     const {id} = useParams()
     const [isDialogVisible, toggleDialogVisible] = useAppStateBoolean(false);
-    const [building, setBuilding] = useState(undefined);
+    const [isDiceVisible, toggleDiceVisible] = useAppStateBoolean(false);
+    const [building, setBuilding] = useState<Building>(undefined);
 
     const connectedUser = useAppSelector(state => state.user.connectedUser)
     const board = useAppSelector(state => state.board.entities.find(it => it.id === +id))
-    const buildings = useAppSelector(state => state.building.entities.filter(it => it.borderId === +id))
+    const buildings = useAppSelector(state => state.building.entities.filter(it => it.boardId === +id))
     const buildingsTaken: string[] = buildings.filter(it => !it.isBuyable).map(it => it.name)
     const myBuildings: string[] = buildings.filter(it => isOwner(it.owner.address, connectedUser)).map(it => it.name)
 
@@ -32,6 +34,7 @@ const DetailsBoard = () => {
             <h3>{board.name}</h3>
             <div className="Coinpoly__container" style={{'--nb': 8} as React.CSSProperties}>
                 <img
+                    onClick={toggleDiceVisible}
                     className="Coinpoly__logo"
                     src="https://ih1.redbubble.net/image.3375471324.6724/st,small,507x507-pad,600x600,f8f8f8.jpg"
                     alt="logo"
@@ -58,18 +61,40 @@ const DetailsBoard = () => {
                 }
             </div>
 
+            {isDiceVisible ? <Dice  onHide={toggleDiceVisible}/> : ''}
+
             <Dialog
                 visible={isDialogVisible}
                 onHide={toggleDialogVisible}
                 style={{width: '50vw'}}
+                header={headerDialog}
             >
-                {building?.name}
+                <ul style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+                    {
+                        isOwner(building?.owner?.address, connectedUser)
+                            ? <div>
+                                <strong>Owner :</strong>
+                                <p className="customer-badge status-qualified">{building.owner.address}</p>
+                            </div>
+                            : <div>
+                                <strong>Owner :</strong>
+                                <p className="customer-badge status-qualified">Me</p>
+                            </div>
+                    }
+                    <div>
+                        <strong>Blind :</strong>
+                        <p>{board.blind} ETH</p>
+                    </div>
+                </ul>
             </Dialog>
-
-            <Dice/>
-
         </div>
     )
+
+    function headerDialog(): React.ReactElement {
+        return (
+            <h2 style={{fontSize: '20px'}}>{building?.name}</h2>
+        )
+    }
 
     function getBuildingStatus(buildingTypeName: string): string {
         const source = BuildingNameType[buildingTypeName]
