@@ -46,6 +46,7 @@ const polyFactoryAbi = [
     "function owner() view returns (address)",
     "function putBuildingToAuction(uint256 _buildingId, uint256 _price)",
     "function renounceOwnership()",
+    "function rent(address _target) payable",
     "function rollDice(uint256 _seed) view returns (uint256)",
     "function safeBatchTransferFrom(address from, address to, uint256[] ids, uint256[] amounts, bytes data)",
     "function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes data)",

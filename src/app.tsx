@@ -89,6 +89,24 @@ const App = () => {
                     transactionHash: getTransactionHashFromEvent(args)
                 }))
             })
+            contract.on("TransferSingle", (...args) => {
+                dispatch(getAllBoards())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'TransferSingle',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
+            contract.on("TransferBatch", (...args) => {
+                dispatch(getAllBoards())
+                dispatch(setToastEntity({
+                    severity: 'info',
+                    summary: 'Transaction successful',
+                    detail: 'TransferBatch',
+                    transactionHash: getTransactionHashFromEvent(args)
+                }))
+            })
         })
     }
 }

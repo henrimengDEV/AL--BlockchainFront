@@ -14,6 +14,8 @@ import {
     setCoinpolyByBoarId,
 } from "../../store/coinpoly/coinpoly.slice";
 import {Coinpoly, PlayerState} from "../../store/coinpoly/coinpoly.model";
+import {getContractPolyFactory} from "../../contract";
+import {ethers} from "ethers";
 
 
 const DetailsBoard = () => {
@@ -164,8 +166,9 @@ const DetailsBoard = () => {
     }
 
     function setConnectedPlayerPosition(value: number) {
-        console.log(coinpoly.playerStates)
         const previousState = coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser))
+
+        const newPosition = (previousState.position + value) % 8
 
         const newState: Coinpoly = {
             ...coinpoly,
@@ -173,12 +176,27 @@ const DetailsBoard = () => {
                 ...coinpoly.playerStates.filter(it => !isOwner(it.userAddress, connectedUser)),
                 {
                     ...previousState,
-                    position: (previousState.position + value) % 8
+                    position: newPosition
                 }
             ]
         }
 
         dispatch(setCoinpolyByBoarId(newState))
+
+        const building = findBuildingByPosition(newPosition)
+        if (building != null) {
+            getContractPolyFactory().then(({contract}) => {
+                contract.rent(
+                    building.owner.address,
+                    {value: ethers.utils.parseEther(`${board.blind * newPosition + 1}`)}
+                )
+            })
+        }
+    }
+
+    function findBuildingByPosition(position: number): Building {
+        const currentBuildNameType: string = BuildingNameType[Object.keys(BuildingNameType)[position]]
+        return buildingsByBoardId.find(it => it.name === currentBuildNameType && !isOwner(it?.owner?.address, connectedUser))
     }
 
     function getPlayersByBuilding(buildingIndex: number): ReactElement {
