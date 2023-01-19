@@ -66,7 +66,7 @@ const DetailsBoard = () => {
                     You are
                     <Avatar
                         style={{height: '2rem', width: '2rem'}}
-                        image={coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser))?.image}
+                        image={coinpoly?.playerStates.find(it => isOwner(it.userAddress, connectedUser))?.image}
                     />
                 </div>
                 <div className="customer-badge status-qualified">MINE</div>
@@ -166,14 +166,14 @@ const DetailsBoard = () => {
     }
 
     function setConnectedPlayerPosition(value: number) {
-        const previousState = coinpoly.playerStates.find(it => isOwner(it.userAddress, connectedUser))
+        const previousState = coinpoly?.playerStates.find(it => isOwner(it.userAddress, connectedUser))
 
         const newPosition = (previousState.position + value) % 8
 
         const newState: Coinpoly = {
             ...coinpoly,
             playerStates: [
-                ...coinpoly.playerStates.filter(it => !isOwner(it.userAddress, connectedUser)),
+                ...coinpoly?.playerStates.filter(it => !isOwner(it.userAddress, connectedUser)),
                 {
                     ...previousState,
                     position: newPosition
@@ -203,7 +203,7 @@ const DetailsBoard = () => {
 
         return <>
             {
-                coinpoly.playerStates.map((player, playerIndex) => {
+                coinpoly?.playerStates.map((player, playerIndex) => {
                     if (player.position !== buildingIndex) return <div key={`avatar_${playerIndex}`}></div>
                     return <div style={{position: 'relative'}}>
                         <Avatar
